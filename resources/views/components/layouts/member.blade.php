@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ $title ?? 'La Fabrique — Espace adhérent' }}</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+<body>
+
+<div class="ea-app">
+    {{-- Sidebar --}}
+    <aside class="ea-side">
+        <div class="ea-side-brand">
+            <img src="/images/logo-mark.svg" width="28" height="28" alt="">
+            <span class="ea-side-brand-text">La <em>Fabrique</em></span>
+        </div>
+
+        <div class="ea-nav-section">Espace</div>
+        <a href="{{ route('member.dashboard') }}" class="ea-nav-item {{ request()->routeIs('member.dashboard') ? 'active' : '' }}">
+            <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/>
+            </svg>
+            Accueil
+        </a>
+        <a href="{{ route('member.circles.index') }}" class="ea-nav-item {{ request()->routeIs('member.circles.*') ? 'active' : '' }}">
+            <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/>
+            </svg>
+            Mes cercles
+        </a>
+        <a href="{{ route('evenements') }}" class="ea-nav-item">
+            <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/>
+            </svg>
+            Événements
+        </a>
+
+        <div class="ea-nav-section">Compte</div>
+        <a href="{{ route('member.profile') }}" class="ea-nav-item {{ request()->routeIs('member.profile') ? 'active' : '' }}">
+            <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="4"/><path d="M4 21c1-5 5-7 8-7s7 2 8 7"/>
+            </svg>
+            Mon profil
+        </a>
+        <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+            @csrf
+            <button type="submit" class="ea-nav-item" style="width:100%;background:none;border:none;text-align:left;">
+                <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+                Déconnexion
+            </button>
+        </form>
+
+        <div class="ea-side-foot">
+            <div class="ea-avatar">{{ strtoupper(substr(Auth::user()->name ?: Auth::user()->email, 0, 2)) }}</div>
+            <div>
+                <div class="ea-side-name-2">{{ Auth::user()->name ?: 'Adhérent' }}</div>
+                <div class="ea-side-role-2">{{ Auth::user()->circles->count() }} cercle(s)</div>
+            </div>
+        </div>
+    </aside>
+
+    {{-- Main content --}}
+    <main class="ea-main">
+        @if (session('success'))
+            <div class="flash-success">{{ session('success') }}</div>
+        @endif
+        @if (session('error'))
+            <div class="flash-error">{{ session('error') }}</div>
+        @endif
+        {{ $slot }}
+    </main>
+</div>
+
+<script src="https://unpkg.com/lucide@latest" defer></script>
+<script>document.addEventListener('DOMContentLoaded', () => { if(window.lucide) lucide.createIcons(); });</script>
+</body>
+</html>
