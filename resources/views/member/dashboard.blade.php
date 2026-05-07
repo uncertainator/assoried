@@ -38,35 +38,85 @@
 
 {{-- Content columns --}}
 <div class="ea-cols">
-    {{-- My circles --}}
-    <div class="ea-panel">
-        <div class="ea-panel-head">
-            <h2 class="ea-panel-title">Mes cercles</h2>
-            <a href="{{ route('member.circles.index') }}" class="ea-panel-link">Gérer →</a>
-        </div>
-        @if ($user->circles->isEmpty())
-            <p style="font-size:14px;color:var(--fg-tertiary);margin:0;">
-                Vous n'avez pas encore rejoint de cercle.
-                <a href="{{ route('member.circles.index') }}" style="color:var(--brique-600);">Découvrir les cercles →</a>
-            </p>
-        @else
-            @foreach ($user->circles as $circle)
-                <div class="ea-event-row">
-                    <div style="flex:1;">
-                        <div class="ea-event-name">{{ $circle->name }}</div>
-                        <div class="ea-event-meta-2">{{ Str::limit($circle->description, 60) }}</div>
+    {{-- Left column --}}
+    <div>
+        {{-- My circles --}}
+        <div class="ea-panel" style="margin-bottom:16px;">
+            <div class="ea-panel-head">
+                <h2 class="ea-panel-title">Mes cercles</h2>
+                <a href="{{ route('member.circles.index') }}" class="ea-panel-link">Gérer →</a>
+            </div>
+            @if ($user->circles->isEmpty())
+                <p style="font-size:14px;color:var(--fg-tertiary);margin:0;">
+                    Vous n'avez pas encore rejoint de cercle.
+                    <a href="{{ route('member.circles.index') }}" style="color:var(--brique-600);">Découvrir les cercles →</a>
+                </p>
+            @else
+                @foreach ($user->circles as $circle)
+                    <div class="ea-event-row">
+                        <div style="flex:1;">
+                            <div class="ea-event-name">{{ $circle->name }}</div>
+                            <div class="ea-event-meta-2">{{ Str::limit($circle->description, 60) }}</div>
+                        </div>
+                        <form method="POST" action="{{ route('member.circles.leave', $circle) }}">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="fb-btn fb-btn-ghost fb-btn-sm"
+                                    onclick="return confirm('Quitter ce cercle ?')">Quitter</button>
+                        </form>
                     </div>
-                    <form method="POST" action="{{ route('member.circles.leave', $circle) }}">
-                        @csrf @method('DELETE')
-                        <button type="submit" class="fb-btn fb-btn-ghost fb-btn-sm"
-                                onclick="return confirm('Quitter ce cercle ?')">Quitter</button>
-                    </form>
+                @endforeach
+            @endif
+        </div>
+
+        {{-- Mes demandes --}}
+        @if ($recentMemberships->isNotEmpty())
+        <div class="ea-panel">
+            <div class="ea-panel-head">
+                <h2 class="ea-panel-title">Mes demandes</h2>
+            </div>
+            @foreach ($recentMemberships as $membership)
+                <div class="ea-event-row" style="align-items:flex-start;">
+                    <div style="flex:1;">
+                        <div class="ea-event-name">{{ $membership->circle->name }}</div>
+                        @if ($membership->status->value === 'pending')
+                            <div class="ea-event-meta-2">
+                                <span class="fb-badge fb-badge-ocre">En attente de validation</span>
+                            </div>
+                        @elseif ($membership->status->value === 'approved')
+                            <div class="ea-event-meta-2">
+                                <span class="fb-badge fb-badge-mousse">Acceptée</span>
+                            </div>
+                        @else
+                            <div class="ea-event-meta-2">
+                                <span class="fb-badge fb-badge-brique">Refusée</span>
+                                @if ($membership->rejection_reason)
+                                    <span style="font-size:12px;color:var(--fg-tertiary);margin-left:8px;">{{ $membership->rejection_reason }}</span>
+                                @endif
+                            </div>
+                        @endif
+                    </div>
+                    @if ($membership->status->value === 'pending')
+                        <form method="POST" action="{{ route('member.circles.cancel', $membership->circle) }}">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="fb-btn fb-btn-ghost fb-btn-sm"
+                                    onclick="return confirm('Annuler cette demande ?')">Annuler</button>
+                        </form>
+                    @endif
                 </div>
+
+                {{-- Marquer les notifications DB liées comme lues --}}
+                @foreach (Auth::user()->unreadNotifications->where('data->circle_name', $membership->circle->name) as $notif)
+                    <form method="POST" action="{{ route('member.notifications.read', $notif->id) }}" style="display:none;" id="notif-read-{{ $notif->id }}">
+                        @csrf
+                    </form>
+                    <script>document.addEventListener('DOMContentLoaded',function(){document.getElementById('notif-read-{{ $notif->id }}').submit();});</script>
+                @endforeach
             @endforeach
+        </div>
         @endif
     </div>
 
-    {{-- Quick actions --}}
+    {{-- Right column --}}
     <div>
         <div class="ea-panel" style="margin-bottom:16px;">
             <div class="ea-panel-head">

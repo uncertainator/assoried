@@ -24,7 +24,7 @@ class MagicLinkController extends Controller
     public function send(Request $request)
     {
         $request->validate([
-            'email'   => ['required', 'email'],
+            'email' => ['required', 'email'],
             'circles' => ['nullable', 'array'],
             'circles.*' => ['integer', 'exists:circles,id'],
         ]);
@@ -35,7 +35,7 @@ class MagicLinkController extends Controller
             'auth.magic.verify',
             now()->addMinutes(15),
             [
-                'email'   => $email,
+                'email' => $email,
                 'circles' => $request->input('circles', []),
             ]
         );
@@ -69,6 +69,10 @@ class MagicLinkController extends Controller
         }
 
         Auth::login($user, remember: true);
+
+        if ($user->needsPasswordSetup()) {
+            return redirect()->route('account.password.setup');
+        }
 
         return redirect()->route('member.dashboard');
     }

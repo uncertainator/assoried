@@ -2,18 +2,35 @@
 
 namespace App\Models;
 
+use Database\Factories\CircleFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Circle extends Model
 {
-    protected $fillable = ['slug', 'name', 'description', 'max_members', 'is_active'];
+    /** @use HasFactory<CircleFactory> */
+    use HasFactory;
+
+    protected $fillable = ['slug', 'name', 'description', 'max_members', 'is_active', 'referent_id'];
 
     protected $casts = ['is_active' => 'boolean'];
 
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class)->withPivot('joined_at');
+    }
+
+    public function referent(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'referent_id');
+    }
+
+    public function memberships(): HasMany
+    {
+        return $this->hasMany(CircleMembership::class);
     }
 
     public function isFull(): bool

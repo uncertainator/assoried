@@ -57,7 +57,7 @@
                     </td>
                     <td>{{ $member->created_at->format('d/m/Y') }}</td>
                     <td style="text-align:right;">
-                        @if ($member->is_admin)
+                        @if ($member->isAdmin())
                             <span class="fb-badge fb-badge-brique">Admin</span>
                         @endif
                     </td>

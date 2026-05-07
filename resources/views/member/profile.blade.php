@@ -29,6 +29,56 @@
         </div>
     </div>
 
+    {{-- Sécurité — mot de passe --}}
+    <div class="ea-panel" style="margin-bottom:20px;">
+        <div class="ea-panel-head">
+            <h2 class="ea-panel-title">Sécurité</h2>
+        </div>
+
+        @if (session('status'))
+            <div class="flash-success" style="margin-bottom:16px;">{{ session('status') }}</div>
+        @endif
+
+        @if (is_null(Auth::user()->password))
+            <p style="font-size:14px;color:var(--fg-secondary);margin:0 0 14px;line-height:1.6;">
+                Votre compte utilise uniquement les liens magiques. Vous pouvez ajouter un mot de passe.
+            </p>
+            <a href="{{ route('account.password.setup') }}" class="fb-btn fb-btn-outline fb-btn-sm">
+                Définir un mot de passe
+            </a>
+        @else
+            <p style="font-size:14px;color:var(--fg-secondary);margin:0 0 16px;">
+                Modifiez votre mot de passe de connexion.
+            </p>
+
+            @if ($errors->has('current_password') || $errors->has('new_password'))
+                <div class="flash-error" style="margin-bottom:12px;">
+                    @foreach ($errors->get('current_password') as $e)<div>{{ $e }}</div>@endforeach
+                    @foreach ($errors->get('new_password') as $e)<div>{{ $e }}</div>@endforeach
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('member.password.update') }}">
+                @csrf
+                <div class="ea-field">
+                    <label for="current_password">Mot de passe actuel</label>
+                    <input type="password" id="current_password" name="current_password" autocomplete="current-password">
+                    @error('current_password')<span class="ea-error">{{ $message }}</span>@enderror
+                </div>
+                <div class="ea-field">
+                    <label for="new_password">Nouveau mot de passe</label>
+                    <input type="password" id="new_password" name="new_password" autocomplete="new-password" placeholder="8 caractères minimum">
+                    @error('new_password')<span class="ea-error">{{ $message }}</span>@enderror
+                </div>
+                <div class="ea-field" style="margin-bottom:16px;">
+                    <label for="new_password_confirmation">Confirmer le nouveau mot de passe</label>
+                    <input type="password" id="new_password_confirmation" name="new_password_confirmation" autocomplete="new-password">
+                </div>
+                <button type="submit" class="fb-btn fb-btn-primary fb-btn-sm">Modifier le mot de passe</button>
+            </form>
+        @endif
+    </div>
+
     {{-- RGPD — delete account --}}
     <div x-data="{ open: false }" class="ea-panel" style="border-color:var(--brique-200);">
         <div class="ea-panel-head">

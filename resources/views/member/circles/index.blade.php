@@ -7,10 +7,6 @@
     </div>
 </div>
 
-@php
-    $myCircleIds = $myCircleIds->toArray();
-@endphp
-
 <div x-data="{ selected: null }" style="display:grid;grid-template-columns:1fr;gap:0;">
 
     {{-- Grid --}}
@@ -25,13 +21,15 @@
         <div class="circles-grid">
             @foreach ($circles as $circle)
                 @php
-                    $isMember = in_array($circle->id, $myCircleIds);
-                    $isFull   = $circle->max_members && $circle->users_count >= $circle->max_members && !$isMember;
+                    $membership = $myMemberships->get($circle->id);
+                    $isApproved = $membership?->status->value === 'approved';
+                    $isPending  = $membership?->status->value === 'pending';
+                    $isFull     = $circle->max_members && $circle->users_count >= $circle->max_members && !$isApproved;
                 @endphp
                 <div
-                    class="circle-card {{ $isMember ? 'selected' : '' }} {{ $isFull ? 'full' : '' }}"
+                    class="circle-card {{ $isApproved ? 'selected' : '' }} {{ $isFull ? 'full' : '' }}"
                     @click="selected = (selected === {{ $circle->id }}) ? null : {{ $circle->id }}"
-                    :class="{ 'selected': selected === {{ $circle->id }} || {{ $isMember ? 'true' : 'false' }} }"
+                    :class="{ 'selected': selected === {{ $circle->id }} || {{ $isApproved ? 'true' : 'false' }} }"
                 >
                     <div class="circle-card-header">
                         <div class="circle-icon">
@@ -42,8 +40,10 @@
                         <div>
                             <h3 class="circle-name">{{ $circle->name }}</h3>
                             <div class="circle-badge-row">
-                                @if ($isMember)
-                                    <span class="fb-badge fb-badge-mousse">✓ Sélectionné</span>
+                                @if ($isApproved)
+                                    <span class="fb-badge fb-badge-mousse">✓ Membre</span>
+                                @elseif ($isPending)
+                                    <span class="fb-badge fb-badge-ocre">⏳ En attente</span>
                                 @elseif ($isFull)
                                     <span class="fb-badge fb-badge-brique">Complet</span>
                                 @else
@@ -56,13 +56,19 @@
                     <div class="circle-footer">
                         <span class="circle-members">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
-                            {{ $circle->users_count }}{{ $circle->max_members ? '/' . $circle->max_members : '' }} membres
+                            {{ $circle->users_count }}{{ $circle->max_members ? '/'.$circle->max_members : '' }} membres
                         </span>
-                        @if ($isMember)
+                        @if ($isApproved)
                             <form method="POST" action="{{ route('member.circles.leave', $circle) }}" @click.stop>
                                 @csrf @method('DELETE')
                                 <button type="submit" class="fb-btn fb-btn-ghost fb-btn-sm"
                                         onclick="return confirm('Quitter ce cercle ?')">Quitter</button>
+                            </form>
+                        @elseif ($isPending)
+                            <form method="POST" action="{{ route('member.circles.cancel', $circle) }}" @click.stop>
+                                @csrf @method('DELETE')
+                                <button type="submit" class="fb-btn fb-btn-ghost fb-btn-sm"
+                                        onclick="return confirm('Annuler la demande ?')">Annuler</button>
                             </form>
                         @elseif ($isFull)
                             <button class="fb-btn fb-btn-ghost fb-btn-sm" disabled>Complet</button>
@@ -82,6 +88,11 @@
     <div class="circle-panel" x-show="selected !== null" x-cloak
          style="margin-top:24px;border-top:1px solid var(--border-subtle);padding:24px 0 0;">
         @foreach ($circles as $circle)
+            @php
+                $membership = $myMemberships->get($circle->id);
+                $isApproved = $membership?->status->value === 'approved';
+                $isPending  = $membership?->status->value === 'pending';
+            @endphp
             <div x-show="selected === {{ $circle->id }}">
                 <div class="circle-panel-header">
                     <div>
@@ -113,13 +124,21 @@
                 </div>
 
                 <div class="circle-panel-action">
-                    @php $isMem = in_array($circle->id, $myCircleIds); @endphp
-                    @if ($isMem)
+                    @if ($isApproved)
                         <form method="POST" action="{{ route('member.circles.leave', $circle) }}">
                             @csrf @method('DELETE')
                             <button type="submit" class="fb-btn fb-btn-outline fb-btn-block"
                                     onclick="return confirm('Quitter ce cercle ?')">
                                 Quitter ce cercle
+                            </button>
+                        </form>
+                    @elseif ($isPending)
+                        <p style="font-size:14px;color:var(--fg-tertiary);margin:0 0 12px;">Votre demande est en cours d'examen.</p>
+                        <form method="POST" action="{{ route('member.circles.cancel', $circle) }}">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="fb-btn fb-btn-outline fb-btn-block"
+                                    onclick="return confirm('Annuler la demande ?')">
+                                Annuler ma demande
                             </button>
                         </form>
                     @else

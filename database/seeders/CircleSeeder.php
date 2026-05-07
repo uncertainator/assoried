@@ -11,40 +11,40 @@ class CircleSeeder extends Seeder
     {
         $circles = [
             [
-                'slug'        => 'mobilite',
-                'name'        => 'Mobilité & transports',
+                'slug' => 'mobilite',
+                'name' => 'Mobilité & transports',
                 'description' => 'Covoiturage, mobilités douces, réduction de l\'impact des déplacements au quotidien.',
-                'is_active'   => true,
+                'is_active' => true,
             ],
             [
-                'slug'        => 'intergenerationnel',
-                'name'        => 'Intergénérationnel',
+                'slug' => 'intergenerationnel',
+                'name' => 'Intergénérationnel',
                 'description' => 'Lien entre les générations, entraide, transmission de savoirs, solidarité de voisinage.',
-                'is_active'   => true,
+                'is_active' => true,
             ],
             [
-                'slug'        => 'finance',
-                'name'        => 'Finances & gouvernance',
+                'slug' => 'finance',
+                'name' => 'Finances & gouvernance',
                 'description' => 'Gestion des ressources de l\'association, transparence, budget participatif.',
-                'is_active'   => true,
+                'is_active' => true,
             ],
             [
-                'slug'        => 'pilotage',
-                'name'        => 'Pilotage & stratégie',
+                'slug' => 'pilotage',
+                'name' => 'Pilotage & stratégie',
                 'description' => 'Orientation de l\'association, projets à long terme, partenariats.',
-                'is_active'   => true,
+                'is_active' => true,
             ],
             [
-                'slug'        => 'lab',
-                'name'        => 'Fabrique à projets',
+                'slug' => 'lab',
+                'name' => 'Fabrique à projets',
                 'description' => 'Incubateur d\'idées : vous avez un projet, on vous aide à le mettre en route.',
-                'is_active'   => true,
+                'is_active' => true,
             ],
             [
-                'slug'        => 'communication',
-                'name'        => 'Communication',
+                'slug' => 'communication',
+                'name' => 'Communication',
                 'description' => 'Visibilité de l\'association, réseaux sociaux, newsletter, affiches et événements.',
-                'is_active'   => true,
+                'is_active' => true,
             ],
         ];
 

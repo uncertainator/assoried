@@ -23,11 +23,11 @@ class CircleController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'slug'        => ['required', 'string', 'max:60', 'unique:circles,slug', 'regex:/^[a-z0-9\-]+$/'],
-            'name'        => ['required', 'string', 'max:120'],
+            'slug' => ['required', 'string', 'max:60', 'unique:circles,slug', 'regex:/^[a-z0-9\-]+$/'],
+            'name' => ['required', 'string', 'max:120'],
             'description' => ['nullable', 'string'],
             'max_members' => ['nullable', 'integer', 'min:1'],
-            'is_active'   => ['boolean'],
+            'is_active' => ['boolean'],
         ]);
 
         $data['is_active'] = $request->boolean('is_active', true);
@@ -45,10 +45,10 @@ class CircleController extends Controller
     public function update(Request $request, Circle $circle)
     {
         $data = $request->validate([
-            'name'        => ['required', 'string', 'max:120'],
+            'name' => ['required', 'string', 'max:120'],
             'description' => ['nullable', 'string'],
             'max_members' => ['nullable', 'integer', 'min:1'],
-            'is_active'   => ['boolean'],
+            'is_active' => ['boolean'],
         ]);
 
         $data['is_active'] = $request->boolean('is_active');

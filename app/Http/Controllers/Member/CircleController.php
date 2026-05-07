@@ -2,22 +2,27 @@
 
 namespace App\Http\Controllers\Member;
 
+use App\Enums\MembershipStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Circle;
-use Illuminate\Http\Request;
+use App\Models\CircleMembership;
+use App\Models\User;
+use App\Notifications\CircleJoinRequestNotification;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 class CircleController extends Controller
 {
     public function index()
     {
         $circles = Circle::where('is_active', true)->withCount('users')->get();
-        $myCircleIds = Auth::user()->circles()->pluck('circles.id');
+        $myMemberships = Auth::user()->memberships()->get()->keyBy('circle_id');
 
-        return view('member.circles.index', compact('circles', 'myCircleIds'));
+        return view('member.circles.index', compact('circles', 'myMemberships'));
     }
 
-    public function join(Request $request, Circle $circle)
+    public function join(Circle $circle): RedirectResponse
     {
         $user = Auth::user();
 
@@ -29,19 +34,66 @@ class CircleController extends Controller
             return back()->with('error', 'Ce cercle est complet.');
         }
 
-        if ($user->circles()->where('circle_id', $circle->id)->exists()) {
-            return back()->with('error', 'Vous êtes déjà dans ce cercle.');
+        $existing = CircleMembership::where('user_id', $user->id)
+            ->where('circle_id', $circle->id)
+            ->first();
+
+        if ($existing?->status === MembershipStatus::Approved) {
+            return back()->with('error', 'Vous êtes déjà membre de ce cercle.');
         }
 
-        $user->circles()->attach($circle->id, ['joined_at' => now()]);
+        if ($existing?->status === MembershipStatus::Pending) {
+            return back()->with('error', 'Votre demande est déjà en cours d\'examen.');
+        }
 
-        return back()->with('success', 'Vous avez rejoint le cercle « ' . $circle->name . ' ».');
+        if ($existing?->status === MembershipStatus::Rejected) {
+            $existing->delete();
+        }
+
+        $membership = CircleMembership::create([
+            'user_id'   => $user->id,
+            'circle_id' => $circle->id,
+            'status'    => MembershipStatus::Pending,
+            'joined_at' => now(),
+        ]);
+
+        $recipients = collect([$circle->referent])
+            ->filter()
+            ->merge(User::where('role', \App\Enums\UserRole::Admin)->get());
+
+        try {
+            Notification::send($recipients, new CircleJoinRequestNotification($membership));
+        } catch (\Throwable $e) {
+            logger()->error('CircleJoinRequestNotification failed: '.$e->getMessage());
+        }
+
+        return back()->with('success', 'Votre demande d\'inscription au cercle « '.$circle->name.' » a été envoyée.');
     }
 
-    public function leave(Circle $circle)
+    public function cancelRequest(Circle $circle): RedirectResponse
     {
-        Auth::user()->circles()->detach($circle->id);
+        $membership = CircleMembership::where('user_id', Auth::id())
+            ->where('circle_id', $circle->id)
+            ->firstOrFail();
 
-        return back()->with('success', 'Vous avez quitté le cercle « ' . $circle->name . ' ».');
+        $this->authorize('cancel', $membership);
+
+        $membership->delete();
+
+        return back()->with('success', 'Votre demande d\'inscription a été annulée.');
+    }
+
+    public function leave(Circle $circle): RedirectResponse
+    {
+        $deleted = CircleMembership::where('user_id', Auth::id())
+            ->where('circle_id', $circle->id)
+            ->where('status', MembershipStatus::Approved)
+            ->delete();
+
+        if (! $deleted) {
+            return back()->with('error', 'Vous n\'êtes pas membre de ce cercle.');
+        }
+
+        return back()->with('success', 'Vous avez quitté le cercle « '.$circle->name.' ».');
     }
 }

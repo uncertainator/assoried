@@ -14,8 +14,11 @@
     {{-- Sidebar --}}
     <aside class="ea-side">
         <div class="ea-side-brand">
-            <img src="/images/logo-mark.svg" width="28" height="28" alt="">
+            <a href="{{ route('home') }}" class="fb-logo">
+                <img src="/images/logo-mark.svg" width="28" height="28" alt="">
+           
             <span class="ea-side-brand-text">La <em>Fabrique</em></span>
+            </a>
         </div>
 
         <div class="ea-nav-section">Espace</div>
@@ -37,6 +40,17 @@
             </svg>
             Événements
         </a>
+
+        @auth
+        @if(Auth::user()->isReferent())
+        <a href="{{ route('referent.requests.index') }}" class="ea-nav-item {{ request()->routeIs('referent.requests.*') ? 'active' : '' }}" style="display:flex;align-items:center;">
+            <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 12h6M9 8h6M9 16h4"/><rect x="3" y="3" width="18" height="18" rx="2"/>
+            </svg>
+            Demandes@include('components._nav_badge')
+        </a>
+        @endif
+        @endauth
 
         <div class="ea-nav-section">Compte</div>
         <a href="{{ route('member.profile') }}" class="ea-nav-item {{ request()->routeIs('member.profile') ? 'active' : '' }}">

@@ -33,11 +33,11 @@ class MemberController extends Controller
             ->orderBy('email')
             ->get();
 
-        $filename = 'membres-' . now()->format('Y-m-d') . '.csv';
+        $filename = 'membres-'.now()->format('Y-m-d').'.csv';
 
         return response()->streamDownload(function () use ($members) {
             $handle = fopen('php://output', 'w');
-            fputs($handle, "\xEF\xBB\xBF"); // BOM for Excel
+            fwrite($handle, "\xEF\xBB\xBF"); // BOM for Excel
             fputcsv($handle, ['Nom', 'Email', 'Cercles', 'Date inscription'], ';');
 
             foreach ($members as $user) {
