@@ -2,17 +2,16 @@
 
 <div class="ea-topbar">
     <div>
-        <h1 class="ea-greeting">
-            Bonjour <em>{{ $user->name ?: explode('@', $user->email)[0] }}</em>,
-        </h1>
+        <h1 class="ea-greeting">Bonjour <em>{{ $user->name ?: explode('@', $user->email)[0] }}</em>,</h1>
         <div class="ea-greeting-sub">Bienvenue dans votre espace adhérent.</div>
     </div>
     <div style="display:flex;gap:8px;">
-        <a href="{{ route('member.circles.index') }}" class="fb-btn fb-btn-primary fb-btn-sm">Gérer mes cercles →</a>
+        <a href="{{ route('member.circles.index') }}" class="fb-btn fb-btn-primary fb-btn-sm">
+            Gérer mes cercles →
+        </a>
     </div>
 </div>
 
-{{-- Stats --}}
 <div class="ea-stats">
     <div class="ea-stat">
         <div class="ea-stat-label">Mes cercles</div>
@@ -21,56 +20,98 @@
     </div>
     <div class="ea-stat">
         <div class="ea-stat-label">Compte</div>
-        <div class="ea-stat-val" style="font-size:1.4rem;">Adhérent</div>
-        <div class="ea-stat-trend">Depuis {{ $user->created_at->translatedFormat('M Y') }}</div>
+        <div class="ea-stat-val" style="font-size:18px;">{{ ucfirst($user->role->value) }}</div>
+        <div class="ea-stat-trend">Adhérent depuis {{ $user->created_at->translatedFormat('M Y') }}</div>
     </div>
     <div class="ea-stat">
         <div class="ea-stat-label">Événements</div>
         <div class="ea-stat-val">—</div>
-        <div class="ea-stat-trend" style="color:var(--fg-tertiary);">À venir</div>
+        <div class="ea-stat-trend">À venir</div>
     </div>
     <div class="ea-stat">
         <div class="ea-stat-label">Projets</div>
         <div class="ea-stat-val">—</div>
-        <div class="ea-stat-trend" style="color:var(--fg-tertiary);">À venir</div>
+        <div class="ea-stat-trend">À venir</div>
     </div>
 </div>
 
-{{-- Content columns --}}
 <div class="ea-cols">
-    {{-- Left column --}}
+
+    {{-- Colonne principale : feed unifié --}}
     <div>
-        {{-- My circles --}}
-        <div class="ea-panel" style="margin-bottom:16px;">
+        <div class="ea-panel">
+            <div class="ea-panel-head">
+                <h2 class="ea-panel-title">Actualités</h2>
+                <a href="{{ route('member.feed') }}" class="ea-panel-link">Feed général →</a>
+            </div>
+
+            @forelse ($feed as $post)
+                <div class="ea-feed-item">
+                    <div class="ea-feed-item-meta">
+                        <span class="ea-feed-source-badge {{ $post->pushed_to_general ? 'ea-feed-source-general' : 'ea-feed-source-circle' }}">
+                            {{ $post->pushed_to_general ? 'Général' : $post->circle->name }}
+                        </span>
+                        <span class="ea-feed-item-date">{{ $post->created_at->translatedFormat('d M Y') }}</span>
+                    </div>
+                    <div class="ea-feed-item-author">{{ $post->author?->name ?? 'Auteur supprimé' }}</div>
+                    <p class="ea-feed-item-body">{{ Str::limit($post->body, 300) }}</p>
+                    <a href="{{ route('member.circles.show', $post->circle) }}" class="ea-feed-item-link">
+                        Voir le feed complet →
+                    </a>
+                </div>
+            @empty
+                <p style="font-size:14px;color:var(--fg-tertiary);font-style:italic;margin:0;">
+                    Aucune publication pour le moment.
+                    @if ($user->circles->isEmpty())
+                        <a href="{{ route('member.circles.index') }}" style="color:var(--brique-600);">Rejoindre un cercle →</a>
+                    @endif
+                </p>
+            @endforelse
+
+            @if ($feed->hasPages())
+                <div style="margin-top:16px;border-top:1px solid var(--border-subtle);padding-top:16px;">
+                    {{ $feed->links() }}
+                </div>
+            @endif
+        </div>
+    </div>
+
+    {{-- Sidebar droite : blocs compacts + découverte --}}
+    <div>
+
+        {{-- Mes cercles (compact) --}}
+        <div class="ea-panel ea-panel--compact" style="margin-bottom:16px;">
             <div class="ea-panel-head">
                 <h2 class="ea-panel-title">Mes cercles</h2>
                 <a href="{{ route('member.circles.index') }}" class="ea-panel-link">Gérer →</a>
             </div>
             @if ($user->circles->isEmpty())
-                <p style="font-size:14px;color:var(--fg-tertiary);margin:0;">
+                <p style="font-size:13px;color:var(--fg-tertiary);margin:0;">
                     Vous n'avez pas encore rejoint de cercle.
-                    <a href="{{ route('member.circles.index') }}" style="color:var(--brique-600);">Découvrir les cercles →</a>
+                    <a href="{{ route('member.circles.index') }}" style="color:var(--brique-600);">Découvrir →</a>
                 </p>
             @else
                 @foreach ($user->circles as $circle)
                     <div class="ea-event-row">
                         <div style="flex:1;">
                             <div class="ea-event-name">{{ $circle->name }}</div>
-                            <div class="ea-event-meta-2">{{ Str::limit($circle->description, 60) }}</div>
+                            <div class="ea-event-meta-2">{{ Str::limit($circle->description, 50) }}</div>
                         </div>
                         <form method="POST" action="{{ route('member.circles.leave', $circle) }}">
                             @csrf @method('DELETE')
                             <button type="submit" class="fb-btn fb-btn-ghost fb-btn-sm"
-                                    onclick="return confirm('Quitter ce cercle ?')">Quitter</button>
+                                    onclick="return confirm('Quitter ce cercle ?')">
+                                Quitter
+                            </button>
                         </form>
                     </div>
                 @endforeach
             @endif
         </div>
 
-        {{-- Mes demandes --}}
+        {{-- Mes demandes (compact, conditionnel) --}}
         @if ($recentMemberships->isNotEmpty())
-        <div class="ea-panel">
+        <div class="ea-panel ea-panel--compact" style="margin-bottom:16px;">
             <div class="ea-panel-head">
                 <h2 class="ea-panel-title">Mes demandes</h2>
             </div>
@@ -80,7 +121,7 @@
                         <div class="ea-event-name">{{ $membership->circle->name }}</div>
                         @if ($membership->status->value === 'pending')
                             <div class="ea-event-meta-2">
-                                <span class="fb-badge fb-badge-ocre">En attente de validation</span>
+                                <span class="fb-badge fb-badge-ocre">En attente</span>
                             </div>
                         @elseif ($membership->status->value === 'approved')
                             <div class="ea-event-meta-2">
@@ -90,7 +131,9 @@
                             <div class="ea-event-meta-2">
                                 <span class="fb-badge fb-badge-brique">Refusée</span>
                                 @if ($membership->rejection_reason)
-                                    <span style="font-size:12px;color:var(--fg-tertiary);margin-left:8px;">{{ $membership->rejection_reason }}</span>
+                                    <span style="font-size:11px;color:var(--fg-tertiary);margin-left:6px;">
+                                        {{ $membership->rejection_reason }}
+                                    </span>
                                 @endif
                             </div>
                         @endif
@@ -99,25 +142,29 @@
                         <form method="POST" action="{{ route('member.circles.cancel', $membership->circle) }}">
                             @csrf @method('DELETE')
                             <button type="submit" class="fb-btn fb-btn-ghost fb-btn-sm"
-                                    onclick="return confirm('Annuler cette demande ?')">Annuler</button>
+                                    onclick="return confirm('Annuler cette demande ?')">
+                                Annuler
+                            </button>
                         </form>
                     @endif
                 </div>
 
-                {{-- Marquer les notifications DB liées comme lues --}}
                 @foreach (Auth::user()->unreadNotifications->where('data->circle_name', $membership->circle->name) as $notif)
-                    <form method="POST" action="{{ route('member.notifications.read', $notif->id) }}" style="display:none;" id="notif-read-{{ $notif->id }}">
+                    <form method="POST" action="{{ route('member.notifications.read', $notif->id) }}"
+                          style="display:none;" id="notif-read-{{ $notif->id }}">
                         @csrf
                     </form>
-                    <script>document.addEventListener('DOMContentLoaded',function(){document.getElementById('notif-read-{{ $notif->id }}').submit();});</script>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            document.getElementById('notif-read-{{ $notif->id }}').submit();
+                        });
+                    </script>
                 @endforeach
             @endforeach
         </div>
         @endif
-    </div>
 
-    {{-- Right column --}}
-    <div>
+        {{-- À découvrir --}}
         <div class="ea-panel" style="margin-bottom:16px;">
             <div class="ea-panel-head">
                 <h2 class="ea-panel-title">À découvrir</h2>
@@ -132,10 +179,13 @@
                 <div class="ea-quick-eyebrow" style="color:var(--mousse-600);">Événements</div>
                 <h3 class="ea-quick-title">Agenda à venir</h3>
                 <p class="ea-quick-desc">Les activités de La Fabrique arrivent bientôt.</p>
-                <a href="{{ route('evenements') }}" class="ea-quick-action" style="color:var(--mousse-600);">En savoir plus →</a>
+                <a href="{{ route('evenements') }}" class="ea-quick-action" style="color:var(--mousse-600);">
+                    En savoir plus →
+                </a>
             </div>
         </div>
 
+        {{-- Mon compte --}}
         <div class="ea-panel">
             <div class="ea-panel-head">
                 <h2 class="ea-panel-title">Mon compte</h2>
@@ -145,11 +195,12 @@
                 <div><strong>Nom :</strong> {{ $user->name ?: 'Non renseigné' }}</div>
             </div>
             <div style="margin-top:16px;border-top:1px solid var(--border-subtle);padding-top:16px;">
-                <a href="{{ route('member.profile') }}" class="fb-btn fb-btn-outline fb-btn-sm" style="margin-right:8px;">
+                <a href="{{ route('member.profile') }}" class="fb-btn fb-btn-outline fb-btn-sm">
                     Mon profil
                 </a>
             </div>
         </div>
+
     </div>
 </div>
 

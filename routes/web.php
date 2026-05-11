@@ -14,8 +14,10 @@ use App\Http\Controllers\MagicLinkController;
 use App\Http\Controllers\Member\AccountController;
 use App\Http\Controllers\Member\CircleController;
 use App\Http\Controllers\Member\DashboardController;
+use App\Http\Controllers\Member\GeneralFeedController;
 use App\Http\Controllers\Member\NotificationController;
 use App\Http\Controllers\Member\PasswordController;
+use App\Http\Controllers\Member\PostController;
 use App\Http\Controllers\Referent\CircleController as ReferentCircleController;
 use App\Http\Controllers\Referent\CircleRequestController as ReferentCircleRequestController;
 use App\Http\Controllers\RegistrationController;
@@ -65,6 +67,13 @@ Route::middleware('auth')->prefix('mon-espace')->name('member.')->group(function
     Route::get('/mon-profil', fn () => view('member.profile'))->name('profile');
     Route::post('/mot-de-passe', [PasswordController::class, 'update'])->name('password.update');
     Route::delete('/mon-compte', [AccountController::class, 'destroy'])->name('account.destroy');
+
+    // Feed cercle + feed général
+    Route::get('/cercles/{circle}', [PostController::class, 'index'])->name('circles.show');
+    Route::post('/cercles/{circle}/posts', [PostController::class, 'store'])->name('circles.posts.store');
+    Route::patch('/posts/{post}/pousser', [PostController::class, 'pushToGeneral'])->name('posts.push');
+    Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+    Route::get('/feed', [GeneralFeedController::class, 'index'])->name('feed');
 });
 
 /* ============================================================

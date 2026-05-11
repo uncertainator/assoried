@@ -124,6 +124,9 @@
                 </div>
 
                 <div class="circle-panel-action">
+                    <a href="{{ route('member.circles.show', $circle) }}" class="fb-btn fb-btn-ghost fb-btn-block" style="margin-bottom:8px;display:block;text-align:center;">
+                        Voir le feed du cercle
+                    </a>
                     @if ($isApproved)
                         <form method="POST" action="{{ route('member.circles.leave', $circle) }}">
                             @csrf @method('DELETE')

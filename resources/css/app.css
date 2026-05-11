@@ -694,3 +694,26 @@ html, body {
 .flash-success { background: var(--mousse-100); color: var(--mousse-700); border: 1px solid var(--mousse-200); border-radius: var(--radius-md); padding: 12px 16px; font-size: 14px; margin-bottom: 16px; }
 .flash-error   { background: var(--brique-100); color: var(--brique-700); border: 1px solid var(--brique-200); border-radius: var(--radius-md); padding: 12px 16px; font-size: 14px; margin-bottom: 16px; }
 .flash-info    { background: var(--ocre-100); color: var(--ocre-700); border: 1px solid var(--ocre-200); border-radius: var(--radius-md); padding: 12px 16px; font-size: 14px; margin-bottom: 16px; }
+
+/* ============================================================
+   Feed unifié dashboard
+   ============================================================ */
+.ea-feed-item { padding: 16px 0; border-bottom: 1px solid var(--border-subtle); }
+.ea-feed-item:last-child { border-bottom: 0; }
+.ea-feed-item-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.ea-feed-source-badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: var(--radius-pill); font: 600 10px/1 var(--font-sans); letter-spacing: 0.08em; text-transform: uppercase; }
+.ea-feed-source-general { background: var(--brique-100); color: var(--brique-700); }
+.ea-feed-source-circle  { background: var(--mousse-100); color: var(--mousse-700); }
+.ea-feed-item-date   { font: 400 12px var(--font-mono); color: var(--fg-tertiary); }
+.ea-feed-item-author { font: 600 14px var(--font-sans); color: var(--fg-primary); margin-bottom: 6px; }
+.ea-feed-item-body   { font: 400 14px/1.6 var(--font-sans); color: var(--fg-secondary); margin: 0 0 8px; }
+.ea-feed-item-link   { font: 500 12px var(--font-sans); color: var(--brique-600); text-decoration: none; }
+.ea-feed-item-link:hover { color: var(--brique-700); }
+
+/* ── Sidebar compacte ───────────────────────────────── */
+.ea-panel--compact { padding: 14px 16px; }
+.ea-panel--compact .ea-panel-head  { margin-bottom: 8px; }
+.ea-panel--compact .ea-panel-title { font-size: 14px; }
+.ea-panel--compact .ea-event-row   { padding: 6px 0; gap: 10px; }
+.ea-panel--compact .ea-event-name  { font-size: 13px; }
+.ea-panel--compact .ea-event-meta-2 { font-size: 11px; }

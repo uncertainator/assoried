@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Member;
 
 use App\Enums\MembershipStatus;
 use App\Http\Controllers\Controller;
+use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -24,6 +25,16 @@ class DashboardController extends Controller
             ->latest('joined_at')
             ->get();
 
-        return view('member.dashboard', compact('user', 'recentMemberships'));
+        $circleIds = $user->circles->pluck('id');
+
+        $feed = Post::with(['author', 'circle'])
+            ->where(function ($q) use ($circleIds) {
+                $q->where('pushed_to_general', true)
+                    ->orWhereIn('circle_id', $circleIds);
+            })
+            ->latest()
+            ->paginate(20);
+
+        return view('member.dashboard', compact('user', 'recentMemberships', 'feed'));
     }
 }
