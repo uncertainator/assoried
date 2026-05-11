@@ -33,6 +33,11 @@ class Circle extends Model
         return $this->hasMany(CircleMembership::class);
     }
 
+    public function isManagedBy(User $user): bool
+    {
+        return $user->isAdmin() || $this->referent_id === $user->id;
+    }
+
     public function isFull(): bool
     {
         if ($this->max_members === null) {

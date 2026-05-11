@@ -40,6 +40,8 @@ class PasswordLoginController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('member.dashboard'));
+        $destination = Auth::user()->isAdmin() ? route('admin.index') : route('member.dashboard');
+
+        return redirect()->intended($destination);
     }
 }

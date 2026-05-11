@@ -41,4 +41,9 @@ class CircleMembershipPolicy
         return $user->id === $membership->user_id
             && $membership->status === MembershipStatus::Pending;
     }
+
+    public function exclude(User $user, CircleMembership $membership): bool
+    {
+        return $membership->circle->isManagedBy($user);
+    }
 }

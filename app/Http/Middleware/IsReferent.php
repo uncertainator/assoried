@@ -11,7 +11,7 @@ class IsReferent
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (! Auth::check() || ! Auth::user()->isReferent()) {
+        if (! Auth::check() || (! Auth::user()->isReferent() && ! Auth::user()->isAdmin())) {
             abort(403);
         }
 

@@ -74,6 +74,8 @@ class MagicLinkController extends Controller
             return redirect()->route('account.password.setup');
         }
 
-        return redirect()->route('member.dashboard');
+        return $user->isAdmin()
+            ? redirect()->route('admin.index')
+            : redirect()->route('member.dashboard');
     }
 }

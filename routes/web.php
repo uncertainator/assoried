@@ -16,6 +16,7 @@ use App\Http\Controllers\Member\CircleController;
 use App\Http\Controllers\Member\DashboardController;
 use App\Http\Controllers\Member\NotificationController;
 use App\Http\Controllers\Member\PasswordController;
+use App\Http\Controllers\Referent\CircleController as ReferentCircleController;
 use App\Http\Controllers\Referent\CircleRequestController as ReferentCircleRequestController;
 use App\Http\Controllers\RegistrationController;
 use Illuminate\Support\Facades\Route;
@@ -73,6 +74,8 @@ Route::middleware(['auth', 'referent'])->prefix('referent')->name('referent.')->
     Route::get('/demandes', [ReferentCircleRequestController::class, 'index'])->name('requests.index');
     Route::post('/demandes/{membership}/approuver', [ReferentCircleRequestController::class, 'approve'])->name('requests.approve');
     Route::post('/demandes/{membership}/refuser', [ReferentCircleRequestController::class, 'reject'])->name('requests.reject');
+    Route::get('/circle/edit', [ReferentCircleController::class, 'edit'])->name('circle.edit');
+    Route::put('/circle', [ReferentCircleController::class, 'update'])->name('circle.update');
 });
 
 /* ============================================================

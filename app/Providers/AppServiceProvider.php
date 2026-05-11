@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Circle;
+use App\Models\CircleMembership;
 use App\Models\User;
+use App\Policies\CircleMembershipPolicy;
+use App\Policies\CirclePolicy;
 use App\Policies\UserRolePolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -23,5 +27,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::policy(User::class, UserRolePolicy::class);
+        Gate::policy(Circle::class, CirclePolicy::class);
+        Gate::policy(CircleMembership::class, CircleMembershipPolicy::class);
     }
 }
