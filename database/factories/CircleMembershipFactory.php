@@ -16,9 +16,9 @@ class CircleMembershipFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id'   => User::factory(),
+            'user_id' => User::factory(),
             'circle_id' => Circle::factory(),
-            'status'    => MembershipStatus::Pending,
+            'status' => MembershipStatus::Pending,
             'joined_at' => now(),
         ];
     }
@@ -31,7 +31,7 @@ class CircleMembershipFactory extends Factory
     public function approved(): static
     {
         return $this->state([
-            'status'       => MembershipStatus::Approved,
+            'status' => MembershipStatus::Approved,
             'validated_at' => now(),
         ]);
     }
@@ -39,8 +39,8 @@ class CircleMembershipFactory extends Factory
     public function rejected(): static
     {
         return $this->state([
-            'status'           => MembershipStatus::Rejected,
-            'validated_at'     => now(),
+            'status' => MembershipStatus::Rejected,
+            'validated_at' => now(),
             'rejection_reason' => fake()->sentence(),
         ]);
     }

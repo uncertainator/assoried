@@ -38,14 +38,31 @@
             <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M4 22V4h16v18"/><path d="M8 10h8M8 14h8M8 18h5"/>
             </svg>
-            Feed général
+            Publications
         </a>
-        <a href="{{ route('evenements') }}" class="ea-nav-item">
+        <a href="{{ route('member.agenda.index') }}" class="ea-nav-item {{ request()->routeIs('member.agenda.*') || request()->routeIs('member.circles.agenda') ? 'active' : '' }}">
             <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/>
             </svg>
-            Événements
+            Agenda
         </a>
+
+        @php
+            $sidebarNextEvents = \App\Models\Event::upcoming()->limit(2)->with('circle')->get();
+        @endphp
+        @if ($sidebarNextEvents->isNotEmpty())
+        <div style="margin:8px 12px 4px;padding:10px 12px;background:var(--surface-raised);border:1px solid var(--border-subtle);border-radius:8px;">
+            <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--fg-tertiary);margin-bottom:8px;">Prochains événements</div>
+            @foreach ($sidebarNextEvents as $sidebarEvent)
+            <div style="margin-bottom:{{ $loop->last ? 0 : 8 }}px;">
+                <div style="font-size:12px;font-weight:500;color:var(--fg-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $sidebarEvent->title }}</div>
+                <div style="font-size:11px;color:var(--fg-tertiary);">
+                    {{ $sidebarEvent->starts_at->translatedFormat('d M à H:i') }} · {{ $sidebarEvent->circle->name }}
+                </div>
+            </div>
+            @endforeach
+        </div>
+        @endif
 
         @auth
         @if(Auth::user()->isAdmin())

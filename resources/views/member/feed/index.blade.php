@@ -1,8 +1,8 @@
-<x-layouts.member title="Feed général — La Fabrique">
+<x-layouts.member title="Publications — La Fabrique">
 
 <div class="ea-topbar">
     <div>
-        <h1 class="ea-greeting">Feed général</h1>
+        <h1 class="ea-greeting">Publications</h1>
         <div class="ea-greeting-sub">Publications choisies par les référents de tous les cercles.</div>
     </div>
 </div>
@@ -10,7 +10,7 @@
 <div>
     @if ($posts->isEmpty())
         <p style="font-size:14px;color:var(--fg-tertiary);font-style:italic;">
-            Aucune publication dans le feed général pour le moment.
+            Aucune publication pour le moment.
         </p>
     @else
         <div style="display:flex;flex-direction:column;gap:16px;">

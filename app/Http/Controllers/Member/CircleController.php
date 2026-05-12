@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Member;
 
 use App\Enums\MembershipStatus;
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Models\Circle;
 use App\Models\CircleMembership;
 use App\Models\User;
 use App\Notifications\CircleJoinRequestNotification;
+use App\Notifications\CircleLeaveNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
@@ -51,15 +53,15 @@ class CircleController extends Controller
         }
 
         $membership = CircleMembership::create([
-            'user_id'   => $user->id,
+            'user_id' => $user->id,
             'circle_id' => $circle->id,
-            'status'    => MembershipStatus::Pending,
+            'status' => MembershipStatus::Pending,
             'joined_at' => now(),
         ]);
 
         $recipients = collect([$circle->referent])
             ->filter()
-            ->merge(User::where('role', \App\Enums\UserRole::Admin)->get());
+            ->merge(User::where('role', UserRole::Admin)->get());
 
         try {
             Notification::send($recipients, new CircleJoinRequestNotification($membership));
@@ -85,15 +87,28 @@ class CircleController extends Controller
 
     public function leave(Circle $circle): RedirectResponse
     {
-        $deleted = CircleMembership::where('user_id', Auth::id())
+        $user = Auth::user();
+
+        $membership = CircleMembership::where('user_id', $user->id)
             ->where('circle_id', $circle->id)
             ->where('status', MembershipStatus::Approved)
-            ->delete();
+            ->first();
 
-        if (! $deleted) {
+        if (! $membership) {
             return back()->with('error', 'Vous n\'êtes pas membre de ce cercle.');
         }
 
-        return back()->with('success', 'Vous avez quitté le cercle « '.$circle->name.' ».');
+        $membership->delete();
+
+        if ($circle->referent) {
+            try {
+                $circle->referent->notify(new CircleLeaveNotification($user, $circle));
+            } catch (\Throwable $e) {
+                logger()->error('CircleLeaveNotification failed: '.$e->getMessage());
+            }
+        }
+
+        return redirect()->route('member.dashboard')
+            ->with('success', 'Vous avez quitté le cercle « '.$circle->name.' ».');
     }
 }

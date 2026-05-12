@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Member;
 
 use App\Enums\MembershipStatus;
 use App\Http\Controllers\Controller;
+use App\Models\Event;
 use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 
@@ -35,6 +36,16 @@ class DashboardController extends Controller
             ->latest()
             ->paginate(20);
 
-        return view('member.dashboard', compact('user', 'recentMemberships', 'feed'));
+        // 2 prochains événements par cercle — une seule requête, pas de N+1
+        $upcomingEventsByCircle = $circleIds->isNotEmpty()
+            ? Event::whereIn('circle_id', $circleIds)
+                ->where('starts_at', '>=', now())
+                ->orderBy('starts_at')
+                ->get()
+                ->groupBy('circle_id')
+                ->map(fn ($events) => $events->take(2))
+            : collect();
+
+        return view('member.dashboard', compact('user', 'recentMemberships', 'feed', 'upcomingEventsByCircle'));
     }
 }

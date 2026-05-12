@@ -42,7 +42,7 @@
         <div class="ea-panel">
             <div class="ea-panel-head">
                 <h2 class="ea-panel-title">Actualités</h2>
-                <a href="{{ route('member.feed') }}" class="ea-panel-link">Feed général →</a>
+                <a href="{{ route('member.feed') }}" class="ea-panel-link">Publications →</a>
             </div>
 
             @forelse ($feed as $post)
@@ -79,8 +79,8 @@
     {{-- Sidebar droite : blocs compacts + découverte --}}
     <div>
 
-        {{-- Mes cercles (compact) --}}
-        <div class="ea-panel ea-panel--compact" style="margin-bottom:16px;">
+        {{-- Mes cercles (agrandi avec aperçu événements) --}}
+        <div class="ea-panel" style="margin-bottom:16px;">
             <div class="ea-panel-head">
                 <h2 class="ea-panel-title">Mes cercles</h2>
                 <a href="{{ route('member.circles.index') }}" class="ea-panel-link">Gérer →</a>
@@ -91,21 +91,29 @@
                     <a href="{{ route('member.circles.index') }}" style="color:var(--brique-600);">Découvrir →</a>
                 </p>
             @else
-                @foreach ($user->circles as $circle)
-                    <div class="ea-event-row">
-                        <div style="flex:1;">
-                            <div class="ea-event-name">{{ $circle->name }}</div>
-                            <div class="ea-event-meta-2">{{ Str::limit($circle->description, 50) }}</div>
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                    @foreach ($user->circles as $circle)
+                        @php $nextEvents = $upcomingEventsByCircle[$circle->id] ?? collect(); @endphp
+                        <div style="background:var(--surface-raised);border:1px solid var(--border-subtle);border-radius:8px;padding:14px 16px;">
+                            <div style="font-size:14px;font-weight:600;margin-bottom:8px;">{{ $circle->name }}</div>
+                            @if ($nextEvents->isEmpty())
+                                <div style="font-size:12px;color:var(--fg-tertiary);font-style:italic;margin-bottom:10px;">Aucun événement à venir</div>
+                            @else
+                                <div style="margin-bottom:10px;display:flex;flex-direction:column;gap:4px;">
+                                    @foreach ($nextEvents as $event)
+                                        <div style="font-size:12px;color:var(--fg-secondary);">
+                                            <span style="font-weight:500;">{{ $event->title }}</span>
+                                            <span style="color:var(--fg-tertiary);"> — {{ $event->starts_at->translatedFormat('d M Y') }}</span>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
+                            <a href="{{ route('member.circles.show', $circle) }}" class="fb-btn fb-btn-outline fb-btn-sm">
+                                Accéder au cercle →
+                            </a>
                         </div>
-                        <form method="POST" action="{{ route('member.circles.leave', $circle) }}">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="fb-btn fb-btn-ghost fb-btn-sm"
-                                    onclick="return confirm('Quitter ce cercle ?')">
-                                Quitter
-                            </button>
-                        </form>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
             @endif
         </div>
 

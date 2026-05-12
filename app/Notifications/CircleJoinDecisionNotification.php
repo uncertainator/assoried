@@ -31,8 +31,8 @@ class CircleJoinDecisionNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'decision'         => $this->membership->status->value,
-            'circle_name'      => $this->membership->circle->name,
+            'decision' => $this->membership->status->value,
+            'circle_name' => $this->membership->circle->name,
             'rejection_reason' => $this->membership->rejection_reason,
         ];
     }

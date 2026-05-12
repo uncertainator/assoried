@@ -2,20 +2,37 @@
 
 namespace App\Http\Controllers\Member;
 
+use App\Enums\MembershipStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
 use App\Models\Circle;
 use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class PostController extends Controller
 {
     public function index(Circle $circle): View
     {
+        $circle->load([
+            'referent',
+            'events' => fn ($q) => $q->orderBy('starts_at'),
+            'actions' => fn ($q) => $q->orderBy('due_date'),
+        ]);
+
+        $upcomingEvents = $circle->events->filter(fn ($e) => $e->starts_at->isFuture())->values();
+        $pastEvents = $circle->events->filter(fn ($e) => $e->starts_at->isPast())->sortByDesc('starts_at')->values();
+        $actions = $circle->actions;
+
+        $membership = Auth::user()->memberships()
+            ->where('circle_id', $circle->id)
+            ->where('status', MembershipStatus::Approved)
+            ->first();
+
         $posts = $circle->posts()->with('author')->latest()->paginate(15);
 
-        return view('member.circles.show', compact('circle', 'posts'));
+        return view('member.circles.show', compact('circle', 'posts', 'upcomingEvents', 'pastEvents', 'actions', 'membership'));
     }
 
     public function store(StorePostRequest $request, Circle $circle): RedirectResponse

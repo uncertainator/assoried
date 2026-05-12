@@ -12,8 +12,10 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MagicLinkController;
 use App\Http\Controllers\Member\AccountController;
+use App\Http\Controllers\Member\CircleActionController;
 use App\Http\Controllers\Member\CircleController;
 use App\Http\Controllers\Member\DashboardController;
+use App\Http\Controllers\Member\EventController;
 use App\Http\Controllers\Member\GeneralFeedController;
 use App\Http\Controllers\Member\NotificationController;
 use App\Http\Controllers\Member\PasswordController;
@@ -67,6 +69,20 @@ Route::middleware('auth')->prefix('mon-espace')->name('member.')->group(function
     Route::get('/mon-profil', fn () => view('member.profile'))->name('profile');
     Route::post('/mot-de-passe', [PasswordController::class, 'update'])->name('password.update');
     Route::delete('/mon-compte', [AccountController::class, 'destroy'])->name('account.destroy');
+
+    // Agenda
+    Route::get('/agenda', [EventController::class, 'index'])->name('agenda.index');
+    Route::get('/cercles/{circle}/agenda', [EventController::class, 'circleIndex'])->name('circles.agenda');
+    Route::get('/cercles/{circle}/agenda/creer', [EventController::class, 'create'])->name('agenda.create');
+    Route::post('/cercles/{circle}/agenda', [EventController::class, 'store'])->name('agenda.store');
+    Route::get('/agenda/{event}/modifier', [EventController::class, 'edit'])->name('agenda.edit');
+    Route::put('/agenda/{event}', [EventController::class, 'update'])->name('agenda.update');
+    Route::delete('/agenda/{event}', [EventController::class, 'destroy'])->name('agenda.destroy');
+
+    // Actions de cercle
+    Route::post('/cercles/{circle}/actions', [CircleActionController::class, 'store'])->name('circle.actions.store');
+    Route::patch('/actions/{action}', [CircleActionController::class, 'update'])->name('circle.actions.update');
+    Route::delete('/actions/{action}', [CircleActionController::class, 'destroy'])->name('circle.actions.destroy');
 
     // Feed cercle + feed général
     Route::get('/cercles/{circle}', [PostController::class, 'index'])->name('circles.show');

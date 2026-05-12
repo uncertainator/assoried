@@ -28,9 +28,9 @@ return new class extends Migration
         foreach ($existing as $row) {
             DB::table('circle_user')->insert([
                 'circle_id' => $row->circle_id,
-                'user_id'   => $row->user_id,
+                'user_id' => $row->user_id,
                 'joined_at' => $row->joined_at,
-                'status'    => 'approved',
+                'status' => 'approved',
             ]);
         }
     }
@@ -51,7 +51,7 @@ return new class extends Migration
         foreach ($existing as $row) {
             DB::table('circle_user')->insert([
                 'circle_id' => $row->circle_id,
-                'user_id'   => $row->user_id,
+                'user_id' => $row->user_id,
                 'joined_at' => $row->joined_at,
             ]);
         }

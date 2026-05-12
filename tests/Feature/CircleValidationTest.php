@@ -3,14 +3,15 @@
 namespace Tests\Feature;
 
 use App\Enums\MembershipStatus;
-use App\Enums\UserRole;
 use App\Models\Circle;
 use App\Models\CircleMembership;
 use App\Models\User;
 use App\Notifications\CircleJoinDecisionNotification;
 use App\Notifications\CircleJoinRequestNotification;
+use App\Notifications\CircleLeaveNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class CircleValidationTest extends TestCase
@@ -25,16 +26,16 @@ class CircleValidationTest extends TestCase
         Notification::fake();
 
         $referent = User::factory()->referent()->create();
-        $circle   = Circle::factory()->create(['referent_id' => $referent->id]);
+        $circle = Circle::factory()->create(['referent_id' => $referent->id]);
         $adherent = User::factory()->adherent()->create();
 
         $response = $this->actingAs($adherent)->post(route('member.circles.join', $circle));
 
         $response->assertRedirect();
         $this->assertDatabaseHas('circle_user', [
-            'user_id'   => $adherent->id,
+            'user_id' => $adherent->id,
             'circle_id' => $circle->id,
-            'status'    => 'pending',
+            'status' => 'pending',
         ]);
         Notification::assertSentTo($referent, CircleJoinRequestNotification::class);
     }
@@ -44,11 +45,11 @@ class CircleValidationTest extends TestCase
     // ----------------------------------------------------------------
     public function test_duplicate_pending_request_is_rejected(): void
     {
-        $circle   = Circle::factory()->create();
+        $circle = Circle::factory()->create();
         $adherent = User::factory()->adherent()->create();
 
         CircleMembership::factory()->pending()->create([
-            'user_id'   => $adherent->id,
+            'user_id' => $adherent->id,
             'circle_id' => $circle->id,
         ]);
 
@@ -64,11 +65,11 @@ class CircleValidationTest extends TestCase
     // ----------------------------------------------------------------
     public function test_already_approved_member_cannot_rejoin(): void
     {
-        $circle   = Circle::factory()->create();
+        $circle = Circle::factory()->create();
         $adherent = User::factory()->adherent()->create();
 
         CircleMembership::factory()->approved()->create([
-            'user_id'   => $adherent->id,
+            'user_id' => $adherent->id,
             'circle_id' => $circle->id,
         ]);
 
@@ -85,20 +86,20 @@ class CircleValidationTest extends TestCase
     {
         Notification::fake();
 
-        $circle   = Circle::factory()->create();
+        $circle = Circle::factory()->create();
         $adherent = User::factory()->adherent()->create();
 
         CircleMembership::factory()->rejected()->create([
-            'user_id'   => $adherent->id,
+            'user_id' => $adherent->id,
             'circle_id' => $circle->id,
         ]);
 
         $this->actingAs($adherent)->post(route('member.circles.join', $circle));
 
         $this->assertDatabaseHas('circle_user', [
-            'user_id'   => $adherent->id,
+            'user_id' => $adherent->id,
             'circle_id' => $circle->id,
-            'status'    => 'pending',
+            'status' => 'pending',
         ]);
         $this->assertDatabaseCount('circle_user', 1);
     }
@@ -110,11 +111,11 @@ class CircleValidationTest extends TestCase
     {
         Notification::fake();
 
-        $circle   = Circle::factory()->create();
+        $circle = Circle::factory()->create();
         $adherent = User::factory()->adherent()->create();
 
         CircleMembership::factory()->pending()->create([
-            'user_id'   => $adherent->id,
+            'user_id' => $adherent->id,
             'circle_id' => $circle->id,
         ]);
 
@@ -122,7 +123,7 @@ class CircleValidationTest extends TestCase
 
         $response->assertRedirect();
         $this->assertDatabaseMissing('circle_user', [
-            'user_id'   => $adherent->id,
+            'user_id' => $adherent->id,
             'circle_id' => $circle->id,
         ]);
         Notification::assertNothingSent();
@@ -133,11 +134,11 @@ class CircleValidationTest extends TestCase
     // ----------------------------------------------------------------
     public function test_adherent_cannot_cancel_approved_membership(): void
     {
-        $circle   = Circle::factory()->create();
+        $circle = Circle::factory()->create();
         $adherent = User::factory()->adherent()->create();
 
         CircleMembership::factory()->approved()->create([
-            'user_id'   => $adherent->id,
+            'user_id' => $adherent->id,
             'circle_id' => $circle->id,
         ]);
 
@@ -154,11 +155,11 @@ class CircleValidationTest extends TestCase
         Notification::fake();
 
         $referent = User::factory()->referent()->create();
-        $circle   = Circle::factory()->create(['referent_id' => $referent->id]);
+        $circle = Circle::factory()->create(['referent_id' => $referent->id]);
         $adherent = User::factory()->adherent()->create();
 
         $membership = CircleMembership::factory()->pending()->create([
-            'user_id'   => $adherent->id,
+            'user_id' => $adherent->id,
             'circle_id' => $circle->id,
         ]);
 
@@ -167,8 +168,8 @@ class CircleValidationTest extends TestCase
 
         $response->assertRedirect();
         $this->assertDatabaseHas('circle_user', [
-            'id'           => $membership->id,
-            'status'       => 'approved',
+            'id' => $membership->id,
+            'status' => 'approved',
             'validated_by' => $referent->id,
         ]);
         Notification::assertSentTo($adherent, CircleJoinDecisionNotification::class);
@@ -182,11 +183,11 @@ class CircleValidationTest extends TestCase
         Notification::fake();
 
         $referent = User::factory()->referent()->create();
-        $circle   = Circle::factory()->create(['referent_id' => $referent->id]);
+        $circle = Circle::factory()->create(['referent_id' => $referent->id]);
         $adherent = User::factory()->adherent()->create();
 
         $membership = CircleMembership::factory()->pending()->create([
-            'user_id'   => $adherent->id,
+            'user_id' => $adherent->id,
             'circle_id' => $circle->id,
         ]);
 
@@ -197,8 +198,8 @@ class CircleValidationTest extends TestCase
 
         $response->assertRedirect();
         $this->assertDatabaseHas('circle_user', [
-            'id'               => $membership->id,
-            'status'           => 'rejected',
+            'id' => $membership->id,
+            'status' => 'rejected',
             'rejection_reason' => 'Le cercle est complet pour cette session.',
         ]);
         Notification::assertSentTo($adherent, CircleJoinDecisionNotification::class);
@@ -209,13 +210,13 @@ class CircleValidationTest extends TestCase
     // ----------------------------------------------------------------
     public function test_referent_cannot_approve_request_for_another_circle(): void
     {
-        $referent      = User::factory()->referent()->create();
-        $circleA       = Circle::factory()->create(['referent_id' => $referent->id]);
-        $circleB       = Circle::factory()->create();
-        $adherent      = User::factory()->adherent()->create();
+        $referent = User::factory()->referent()->create();
+        $circleA = Circle::factory()->create(['referent_id' => $referent->id]);
+        $circleB = Circle::factory()->create();
+        $adherent = User::factory()->adherent()->create();
 
         $membership = CircleMembership::factory()->pending()->create([
-            'user_id'   => $adherent->id,
+            'user_id' => $adherent->id,
             'circle_id' => $circleB->id,
         ]);
 
@@ -232,8 +233,8 @@ class CircleValidationTest extends TestCase
     {
         Notification::fake();
 
-        $admin    = User::factory()->admin()->create();
-        $circle   = Circle::factory()->create(['referent_id' => null]);
+        $admin = User::factory()->admin()->create();
+        $circle = Circle::factory()->create(['referent_id' => null]);
         $adherent = User::factory()->adherent()->create();
 
         $this->actingAs($adherent)->post(route('member.circles.join', $circle));
@@ -248,7 +249,7 @@ class CircleValidationTest extends TestCase
     public function test_nav_badge_shows_pending_count_for_referent(): void
     {
         $referent = User::factory()->referent()->create();
-        $circle   = Circle::factory()->create(['referent_id' => $referent->id]);
+        $circle = Circle::factory()->create(['referent_id' => $referent->id]);
 
         CircleMembership::factory()->pending()->count(3)->create(['circle_id' => $circle->id]);
 
@@ -263,13 +264,13 @@ class CircleValidationTest extends TestCase
     public function test_adherent_can_mark_notification_as_read(): void
     {
         $adherent = User::factory()->adherent()->create();
-        $circle   = Circle::factory()->create();
+        $circle = Circle::factory()->create();
 
         $adherent->notifications()->create([
-            'id'              => \Illuminate\Support\Str::uuid(),
-            'type'            => CircleJoinDecisionNotification::class,
-            'data'            => json_encode(['circle_name' => $circle->name, 'decision' => 'approved']),
-            'read_at'         => null,
+            'id' => Str::uuid(),
+            'type' => CircleJoinDecisionNotification::class,
+            'data' => json_encode(['circle_name' => $circle->name, 'decision' => 'approved']),
+            'read_at' => null,
         ]);
 
         $notification = $adherent->unreadNotifications()->first();
@@ -286,12 +287,12 @@ class CircleValidationTest extends TestCase
     // ----------------------------------------------------------------
     public function test_admin_sees_requests_after_referent_demotion(): void
     {
-        $admin    = User::factory()->admin()->create();
-        $circle   = Circle::factory()->create(['referent_id' => null]);
+        $admin = User::factory()->admin()->create();
+        $circle = Circle::factory()->create(['referent_id' => null]);
         $adherent = User::factory()->adherent()->create();
 
         CircleMembership::factory()->pending()->create([
-            'user_id'   => $adherent->id,
+            'user_id' => $adherent->id,
             'circle_id' => $circle->id,
         ]);
 
@@ -308,12 +309,12 @@ class CircleValidationTest extends TestCase
     {
         Notification::fake();
 
-        $admin    = User::factory()->admin()->create();
-        $circle   = Circle::factory()->create();
+        $admin = User::factory()->admin()->create();
+        $circle = Circle::factory()->create();
         $adherent = User::factory()->adherent()->create();
 
         $membership = CircleMembership::factory()->pending()->create([
-            'user_id'   => $adherent->id,
+            'user_id' => $adherent->id,
             'circle_id' => $circle->id,
         ]);
 
@@ -322,8 +323,73 @@ class CircleValidationTest extends TestCase
 
         $response->assertRedirect();
         $this->assertDatabaseHas('circle_user', [
-            'id'     => $membership->id,
+            'id' => $membership->id,
             'status' => 'approved',
         ]);
+    }
+
+    // ----------------------------------------------------------------
+    // Quitter le cercle
+    // ----------------------------------------------------------------
+
+    public function test_leave_circle_sends_notification_to_referent(): void
+    {
+        Notification::fake();
+
+        $referent = User::factory()->referent()->create();
+        $circle = Circle::factory()->create(['referent_id' => $referent->id]);
+        $adherent = User::factory()->adherent()->create();
+
+        CircleMembership::factory()->approved()->create([
+            'user_id' => $adherent->id,
+            'circle_id' => $circle->id,
+        ]);
+
+        $this->actingAs($adherent)
+            ->delete(route('member.circles.leave', $circle));
+
+        Notification::assertSentTo($referent, CircleLeaveNotification::class);
+    }
+
+    public function test_leave_circle_redirects_to_dashboard_with_flash(): void
+    {
+        $referent = User::factory()->referent()->create();
+        $circle = Circle::factory()->create(['referent_id' => $referent->id]);
+        $adherent = User::factory()->adherent()->create();
+
+        CircleMembership::factory()->approved()->create([
+            'user_id' => $adherent->id,
+            'circle_id' => $circle->id,
+        ]);
+
+        $this->actingAs($adherent)
+            ->delete(route('member.circles.leave', $circle))
+            ->assertRedirect(route('member.dashboard'))
+            ->assertSessionHas('success');
+
+        $this->assertDatabaseMissing('circle_user', [
+            'user_id' => $adherent->id,
+            'circle_id' => $circle->id,
+            'status' => MembershipStatus::Approved->value,
+        ]);
+    }
+
+    public function test_leave_circle_no_notification_when_no_referent(): void
+    {
+        Notification::fake();
+
+        $circle = Circle::factory()->create(['referent_id' => null]);
+        $adherent = User::factory()->adherent()->create();
+
+        CircleMembership::factory()->approved()->create([
+            'user_id' => $adherent->id,
+            'circle_id' => $circle->id,
+        ]);
+
+        $this->actingAs($adherent)
+            ->delete(route('member.circles.leave', $circle))
+            ->assertRedirect(route('member.dashboard'));
+
+        Notification::assertNothingSent();
     }
 }

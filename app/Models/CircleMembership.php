@@ -30,8 +30,8 @@ class CircleMembership extends Model
     protected function casts(): array
     {
         return [
-            'status'       => MembershipStatus::class,
-            'joined_at'    => 'datetime',
+            'status' => MembershipStatus::class,
+            'joined_at' => 'datetime',
             'validated_at' => 'datetime',
         ];
     }

@@ -28,7 +28,7 @@ class CircleJoinRequestNotification extends Notification
             ->subject('Nouvelle demande d\'inscription — '.$this->membership->circle->name)
             ->view('emails.circle-join-request', [
                 'membership' => $this->membership,
-                'link'       => $link,
+                'link' => $link,
             ]);
     }
 
@@ -39,10 +39,10 @@ class CircleJoinRequestNotification extends Notification
             : route('admin.requests.index');
 
         return [
-            'applicant_name'  => $this->membership->user->name,
+            'applicant_name' => $this->membership->user->name,
             'applicant_email' => $this->membership->user->email,
-            'circle_name'     => $this->membership->circle->name,
-            'link'            => $link,
+            'circle_name' => $this->membership->circle->name,
+            'link' => $link,
         ];
     }
 }

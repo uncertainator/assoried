@@ -35,7 +35,7 @@ class CircleRequestController extends Controller
         $this->authorize('approve', $membership);
 
         $membership->update([
-            'status'       => MembershipStatus::Approved,
+            'status' => MembershipStatus::Approved,
             'validated_by' => Auth::id(),
             'validated_at' => now(),
         ]);
@@ -54,9 +54,9 @@ class CircleRequestController extends Controller
         $this->authorize('reject', $membership);
 
         $membership->update([
-            'status'           => MembershipStatus::Rejected,
-            'validated_by'     => Auth::id(),
-            'validated_at'     => now(),
+            'status' => MembershipStatus::Rejected,
+            'validated_by' => Auth::id(),
+            'validated_at' => now(),
             'rejection_reason' => $request->reason,
         ]);
 
