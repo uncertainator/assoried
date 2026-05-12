@@ -19,6 +19,7 @@ class UpdateEventRequest extends FormRequest
             'ends_at' => ['nullable', 'date', 'after_or_equal:starts_at'],
             'description' => ['nullable', 'string'],
             'location' => ['nullable', 'string', 'max:200'],
+            'is_public' => ['boolean'],
         ];
     }
 

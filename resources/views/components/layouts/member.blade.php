@@ -47,22 +47,7 @@
             Agenda
         </a>
 
-        @php
-            $sidebarNextEvents = \App\Models\Event::upcoming()->limit(2)->with('circle')->get();
-        @endphp
-        @if ($sidebarNextEvents->isNotEmpty())
-        <div style="margin:8px 12px 4px;padding:10px 12px;background:var(--surface-raised);border:1px solid var(--border-subtle);border-radius:8px;">
-            <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--fg-tertiary);margin-bottom:8px;">Prochains événements</div>
-            @foreach ($sidebarNextEvents as $sidebarEvent)
-            <div style="margin-bottom:{{ $loop->last ? 0 : 8 }}px;">
-                <div style="font-size:12px;font-weight:500;color:var(--fg-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $sidebarEvent->title }}</div>
-                <div style="font-size:11px;color:var(--fg-tertiary);">
-                    {{ $sidebarEvent->starts_at->translatedFormat('d M à H:i') }} · {{ $sidebarEvent->circle->name }}
-                </div>
-            </div>
-            @endforeach
-        </div>
-        @endif
+        
 
         @auth
         @if(Auth::user()->isAdmin())

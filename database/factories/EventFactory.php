@@ -33,6 +33,11 @@ class EventFactory extends Factory
         return $this->state(['starts_at' => now()->subDays(3)]);
     }
 
+    public function public(): static
+    {
+        return $this->state(['is_public' => true]);
+    }
+
     public function withEnd(): static
     {
         return $this->state(fn (array $attributes) => [

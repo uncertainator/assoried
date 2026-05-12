@@ -75,3 +75,18 @@
         <div class="fb-error">{{ $message }}</div>
     @enderror
 </div>
+
+<div class="fb-field" style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+    <input type="hidden" name="is_public" value="0">
+    <input
+        type="checkbox"
+        id="is_public"
+        name="is_public"
+        value="1"
+        {{ old('is_public', $event->is_public ?? false) ? 'checked' : '' }}
+        style="width:16px;height:16px;accent-color:var(--brique-500);"
+    >
+    <label for="is_public" style="font-size:13px;font-weight:500;color:var(--fg-secondary);cursor:pointer;">
+        Rendre cet événement visible publiquement (agenda public)
+    </label>
+</div>

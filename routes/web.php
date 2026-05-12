@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MagicLinkController;
+use App\Http\Controllers\PublicAgendaController;
 use App\Http\Controllers\Member\AccountController;
 use App\Http\Controllers\Member\CircleActionController;
 use App\Http\Controllers\Member\CircleController;
@@ -29,6 +30,7 @@ use Illuminate\Support\Facades\Route;
    Public routes
    ============================================================ */
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/agenda-public', [PublicAgendaController::class, 'index'])->name('public.agenda');
 Route::get('/evenements', fn () => view('coming-soon', ['title' => 'Événements', 'soon' => 'L\'agenda des événements']))->name('evenements');
 Route::get('/mentions-legales', fn () => view('legal.mentions'))->name('legal.mentions');
 Route::get('/politique-confidentialite', fn () => view('legal.privacy'))->name('legal.privacy');

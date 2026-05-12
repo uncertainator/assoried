@@ -23,20 +23,42 @@
         <div class="ea-stat-val" style="font-size:18px;">{{ ucfirst($user->role->value) }}</div>
         <div class="ea-stat-trend">Adhérent depuis {{ $user->created_at->translatedFormat('M Y') }}</div>
     </div>
-    <div class="ea-stat">
+    <!--<div class="ea-stat">
         <div class="ea-stat-label">Événements</div>
         <div class="ea-stat-val">—</div>
         <div class="ea-stat-trend">À venir</div>
-    </div>
-    <div class="ea-stat">
+    </div>-->
+    <!--<div class="ea-stat">
         <div class="ea-stat-label">Projets</div>
         <div class="ea-stat-val">—</div>
         <div class="ea-stat-trend">À venir</div>
-    </div>
+    </div>-->
 </div>
-
 <div class="ea-cols">
+    {{-- Colonne principale : next events  --}}
+        <div class="ea-panel">
+            <div class="ea-panel-head">
+                <h2 class="ea-panel-title">Prochains événements</h2>
+            </div>
+        @php
+            $sidebarNextEvents = \App\Models\Event::upcoming()->limit(2)->with('circle')->get();
+        @endphp
+        @if ($sidebarNextEvents->isNotEmpty())
+        <div style="">
+            <div style="">Prochains événements</div>
+            @foreach ($sidebarNextEvents as $sidebarEvent)
+            <div style="">
+                <div style="">{{ $sidebarEvent->title }}</div>
+                <div style="">
+                    {{ $sidebarEvent->starts_at->translatedFormat('d M à H:i') }} · {{ $sidebarEvent->circle->name }}
+                </div>
+            </div>
+            @endforeach
+        </div>
+        @endif
 
+           
+    </div>
     {{-- Colonne principale : feed unifié --}}
     <div>
         <div class="ea-panel">
