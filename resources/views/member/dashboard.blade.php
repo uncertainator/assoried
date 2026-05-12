@@ -44,17 +44,18 @@
             $sidebarNextEvents = \App\Models\Event::upcoming()->limit(2)->with('circle')->get();
         @endphp
         @if ($sidebarNextEvents->isNotEmpty())
-        <div style="">
-            <div style="">Prochains événements</div>
             @foreach ($sidebarNextEvents as $sidebarEvent)
-            <div style="">
-                <div style="">{{ $sidebarEvent->title }}</div>
-                <div style="">
-                    {{ $sidebarEvent->starts_at->translatedFormat('d M à H:i') }} · {{ $sidebarEvent->circle->name }}
+            <div class="ea-event-row">
+                <div class="ea-event-info">
+                    <div class="ea-event-name">{{ $sidebarEvent->title }}</div>
+                    <div class="ea-event-meta-2">
+                        {{ $sidebarEvent->starts_at->translatedFormat('d M à H:i') }} · {{ $sidebarEvent->circle->name }}
+                    </div>
                 </div>
             </div>
             @endforeach
-        </div>
+        @else
+            <p style="font-size:14px;color:var(--fg-tertiary);font-style:italic;margin:0;">Aucun événement à venir.</p>
         @endif
 
            
@@ -98,7 +99,7 @@
         </div>
     </div>
 
-    {{-- Sidebar droite : blocs compacts + découverte --}}
+    {{-- Colonne 2 : Mes cercles + Mes demandes --}}
     <div>
 
         {{-- Mes cercles (agrandi avec aperçu événements) --}}
@@ -193,6 +194,11 @@
             @endforeach
         </div>
         @endif
+
+    </div>{{-- /Colonne 2 --}}
+
+    {{-- Colonne 3 : À découvrir + Mon compte --}}
+    <div>
 
         {{-- À découvrir --}}
         <div class="ea-panel" style="margin-bottom:16px;">

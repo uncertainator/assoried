@@ -1,3 +1,5 @@
+[x-cloak] { display: none !important; }
+
 /* Google Fonts — La Fabrique design system */
 @import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Caveat:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
@@ -579,8 +581,9 @@ html, body {
 .ea-stat-val em { font-size: 16px; color: var(--fg-tertiary); font-style: normal; font-family: var(--font-sans); font-weight: 400; margin-left: 4px; }
 .ea-stat-trend  { font: 500 12px var(--font-sans); color: var(--mousse-500); margin-top: 6px; }
 
-.ea-cols { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
-@media (max-width: 900px) { .ea-cols { grid-template-columns: 1fr; } }
+.ea-cols { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: start; }
+@media (max-width: 1100px) { .ea-cols { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 700px)  { .ea-cols { grid-template-columns: 1fr; } }
 
 .ea-panel       { background: var(--bg-surface-2); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-sm); }
 .ea-panel-head  { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }

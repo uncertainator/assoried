@@ -63,7 +63,7 @@
             <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M9 12h6M9 8h6M9 16h4"/><rect x="3" y="3" width="18" height="18" rx="2"/>
             </svg>
-            Demandes@include('components._nav_badge')
+            Demandes @include('components._nav_badge')
         </a>
         <a href="{{ route('referent.circle.edit') }}" class="ea-nav-item {{ request()->routeIs('referent.circle.*') ? 'active' : '' }}">
             <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">

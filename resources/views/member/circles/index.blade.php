@@ -7,7 +7,7 @@
     </div>
 </div>
 
-<div x-data="{ selected: null }" style="display:grid;grid-template-columns:1fr;gap:0;">
+<div x-data="{ selected: null }" class="circles-layout">
 
     {{-- Grid --}}
     <div>
@@ -86,7 +86,12 @@
 
     {{-- Detail panel (Alpine.js) --}}
     <div class="circle-panel" x-show="selected !== null" x-cloak
-         style="margin-top:24px;border-top:1px solid var(--border-subtle);padding:24px 0 0;">
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 translate-x-4"
+         x-transition:enter-end="opacity-100 translate-x-0"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100 translate-x-0"
+         x-transition:leave-end="opacity-0 translate-x-4">
         @foreach ($circles as $circle)
             @php
                 $membership = $myMemberships->get($circle->id);
