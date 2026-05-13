@@ -285,6 +285,34 @@ html, body {
 .fb-nav-links a.active { color: var(--brique-600); border-bottom-color: var(--brique-500); font-weight: 500; }
 @media (max-width: 768px) { .fb-nav-links { display: none; } }
 
+/* Nav dropdown */
+.fb-nav-dropdown { position: relative; display: flex; align-items: center; }
+.fb-nav-dropdown-trigger {
+    font-size: 14px; color: var(--fg-secondary); cursor: default;
+    padding: 4px 0; border-bottom: 2px solid transparent;
+    transition: color var(--duration-fast);
+    display: flex; align-items: center; gap: 4px; user-select: none;
+}
+.fb-nav-dropdown:hover .fb-nav-dropdown-trigger,
+.fb-nav-dropdown:focus-within .fb-nav-dropdown-trigger { color: var(--brique-600); }
+.fb-nav-dropdown.active .fb-nav-dropdown-trigger { color: var(--brique-600); border-bottom-color: var(--brique-500); font-weight: 500; }
+.fb-nav-dropdown-menu {
+    display: none; position: absolute; top: calc(100% + 10px); left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-surface); border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md); box-shadow: 0 8px 24px rgba(0,0,0,.08);
+    min-width: 160px; padding: 6px; z-index: 100;
+}
+.fb-nav-dropdown:hover .fb-nav-dropdown-menu,
+.fb-nav-dropdown:focus-within .fb-nav-dropdown-menu { display: block; }
+.fb-nav-dropdown-menu a {
+    display: block; padding: 8px 12px; font-size: 13px;
+    color: var(--fg-secondary); text-decoration: none; border-bottom: none;
+    border-radius: var(--radius-sm);
+    transition: background var(--duration-fast), color var(--duration-fast);
+}
+.fb-nav-dropdown-menu a:hover { background: var(--bg-raised); color: var(--brique-600); }
+
 /* ============================================================
    Hero
    ============================================================ */

@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\PasswordSetupController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LabExternalRequestController;
 use App\Http\Controllers\LabInternalRequestController;
 use App\Http\Controllers\LabServiceController;
 use App\Http\Controllers\MagicLinkController;
@@ -39,6 +40,21 @@ Route::get('/politique-confidentialite', fn () => view('legal.privacy'))->name('
 
 Route::get('/inscription', [RegistrationController::class, 'show'])->name('inscription');
 Route::post('/inscription', [RegistrationController::class, 'store'])->name('inscription.store');
+
+/* ============================================================
+   Lab — demandes publiques externes (sans authentification)
+   ============================================================ */
+Route::get('/lab/citoyen', [LabExternalRequestController::class, 'showCitoyen'])->name('lab.external.citoyen');
+Route::post('/lab/citoyen', [LabExternalRequestController::class, 'storeCitoyen'])
+    ->middleware('throttle:10,1')
+    ->name('lab.external.citoyen.store');
+
+Route::get('/lab/entreprise', [LabExternalRequestController::class, 'showEntreprise'])->name('lab.external.entreprise');
+Route::post('/lab/entreprise', [LabExternalRequestController::class, 'storeEntreprise'])
+    ->middleware('throttle:10,1')
+    ->name('lab.external.entreprise.store');
+
+Route::get('/lab/demande-recue', fn () => view('lab.external.confirmation'))->name('lab.external.confirmation');
 
 /* ============================================================
    Auth — connexion (magic link + mot de passe)
@@ -118,6 +134,14 @@ Route::middleware('auth')->prefix('lab/services')->name('lab.services.')->group(
     Route::get('/{service}/edit', [LabServiceController::class, 'edit'])->name('edit');
     Route::put('/{service}', [LabServiceController::class, 'update'])->name('update');
     Route::delete('/{service}', [LabServiceController::class, 'destroy'])->name('destroy');
+});
+
+/* ============================================================
+   Lab — liste demandes externes (référents Lab + admins)
+   ============================================================ */
+Route::middleware('auth')->group(function () {
+    Route::get('/lab/external-requests', [LabExternalRequestController::class, 'index'])->name('lab.external.index');
+    Route::patch('/lab/external-requests/{labExternalRequest}/statut', [LabExternalRequestController::class, 'updateStatus'])->name('lab.external.update-status');
 });
 
 /* ============================================================

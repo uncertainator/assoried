@@ -17,6 +17,16 @@
     <nav class="fb-nav-links">
         <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Accueil</a>
         <a href="{{ route('evenements') }}" class="{{ request()->routeIs('evenements') ? 'active' : '' }}">Événements</a>
+        <div class="fb-nav-dropdown {{ request()->routeIs('lab.external.*') ? 'active' : '' }}">
+            <span class="fb-nav-dropdown-trigger">
+                Lab
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
+            <div class="fb-nav-dropdown-menu">
+                <a href="{{ route('lab.external.citoyen') }}" class="{{ request()->routeIs('lab.external.citoyen*') ? 'active' : '' }}">Particuliers</a>
+                <a href="{{ route('lab.external.entreprise') }}" class="{{ request()->routeIs('lab.external.entreprise*') ? 'active' : '' }}">Entreprises</a>
+            </div>
+        </div>
         @auth
             <a href="{{ route('member.dashboard') }}" class="{{ request()->routeIs('member.*') ? 'active' : '' }}">Mon espace</a>
         @else
