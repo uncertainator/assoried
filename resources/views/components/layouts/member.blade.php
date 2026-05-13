@@ -46,6 +46,12 @@
             </svg>
             Agenda
         </a>
+        <a href="{{ route('lab.services.index') }}" class="ea-nav-item {{ request()->routeIs('lab.services.*') ? 'active' : '' }}">
+            <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2M8 7V5a2 2 0 0 0-4 0v2"/>
+            </svg>
+            Catalogue Lab
+        </a>
 
         
 

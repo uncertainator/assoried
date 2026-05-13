@@ -198,7 +198,7 @@
     </div>{{-- /Colonne 2 --}}
 
     {{-- Colonne 3 : À découvrir + Mon compte --}}
-    <div>
+    <!--<div>
 
         {{-- À découvrir --}}
         <div class="ea-panel" style="margin-bottom:16px;">
@@ -237,7 +237,7 @@
             </div>
         </div>
 
-    </div>
+    </div>-->
 </div>
 
 </x-layouts.member>

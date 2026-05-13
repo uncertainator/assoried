@@ -10,8 +10,9 @@ use App\Http\Controllers\Auth\PasswordSetupController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LabInternalRequestController;
+use App\Http\Controllers\LabServiceController;
 use App\Http\Controllers\MagicLinkController;
-use App\Http\Controllers\PublicAgendaController;
 use App\Http\Controllers\Member\AccountController;
 use App\Http\Controllers\Member\CircleActionController;
 use App\Http\Controllers\Member\CircleController;
@@ -21,6 +22,7 @@ use App\Http\Controllers\Member\GeneralFeedController;
 use App\Http\Controllers\Member\NotificationController;
 use App\Http\Controllers\Member\PasswordController;
 use App\Http\Controllers\Member\PostController;
+use App\Http\Controllers\PublicAgendaController;
 use App\Http\Controllers\Referent\CircleController as ReferentCircleController;
 use App\Http\Controllers\Referent\CircleRequestController as ReferentCircleRequestController;
 use App\Http\Controllers\RegistrationController;
@@ -103,6 +105,30 @@ Route::middleware(['auth', 'referent'])->prefix('referent')->name('referent.')->
     Route::post('/demandes/{membership}/refuser', [ReferentCircleRequestController::class, 'reject'])->name('requests.reject');
     Route::get('/circle/edit', [ReferentCircleController::class, 'edit'])->name('circle.edit');
     Route::put('/circle', [ReferentCircleController::class, 'update'])->name('circle.update');
+});
+
+/* ============================================================
+   Lab — catalogue de services (tout membre connecté)
+   ============================================================ */
+Route::middleware('auth')->prefix('lab/services')->name('lab.services.')->group(function () {
+    Route::get('/', [LabServiceController::class, 'index'])->name('index');
+    Route::get('/create', [LabServiceController::class, 'create'])->name('create');
+    Route::post('/', [LabServiceController::class, 'store'])->name('store');
+    Route::get('/{service}', [LabServiceController::class, 'show'])->name('show');
+    Route::get('/{service}/edit', [LabServiceController::class, 'edit'])->name('edit');
+    Route::put('/{service}', [LabServiceController::class, 'update'])->name('update');
+    Route::delete('/{service}', [LabServiceController::class, 'destroy'])->name('destroy');
+});
+
+/* ============================================================
+   Lab — demandes de soutien interne (tout membre connecté)
+   ============================================================ */
+Route::middleware('auth')->prefix('lab')->name('lab.')->group(function () {
+    Route::get('/demandes/nouvelle', [LabInternalRequestController::class, 'create'])->name('requests.create');
+    Route::post('/demandes', [LabInternalRequestController::class, 'store'])->name('requests.store');
+    Route::get('/mes-demandes', [LabInternalRequestController::class, 'myRequests'])->name('requests.my');
+    Route::get('/demandes', [LabInternalRequestController::class, 'index'])->name('requests.index');
+    Route::patch('/demandes/{labInternalRequest}/statut', [LabInternalRequestController::class, 'updateStatus'])->name('requests.update-status');
 });
 
 /* ============================================================
