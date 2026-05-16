@@ -13,6 +13,7 @@ use App\Notifications\CircleLeaveNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\View\View;
 
 class CircleController extends Controller
 {
@@ -22,6 +23,28 @@ class CircleController extends Controller
         $myMemberships = Auth::user()->memberships()->get()->keyBy('circle_id');
 
         return view('member.circles.index', compact('circles', 'myMemberships'));
+    }
+
+    public function directory(Circle $circle): View
+    {
+        $user = Auth::user();
+
+        $this->authorize('viewDirectory', $circle);
+
+        $members = $circle->users()
+            ->wherePivot('status', MembershipStatus::Approved)
+            ->orderBy('name')
+            ->get();
+
+        // Le référent peut ne pas avoir de ligne dans circle_user (assigné via referent_id)
+        // mais doit quand même apparaître dans l'annuaire de son cercle.
+        if ($circle->referent_id && ! $members->contains('id', $circle->referent_id) && $circle->referent) {
+            $members = $members->push($circle->referent)->sortBy('name')->values();
+        }
+
+        $canSeeRoles = $circle->isManagedBy($user);
+
+        return view('member.circles.directory', compact('circle', 'members', 'canSeeRoles'));
     }
 
     public function join(Circle $circle): RedirectResponse

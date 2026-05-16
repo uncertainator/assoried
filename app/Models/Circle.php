@@ -48,6 +48,21 @@ class Circle extends Model
         return $this->hasMany(CircleAction::class);
     }
 
+    public function meetings(): HasMany
+    {
+        return $this->hasMany(Meeting::class);
+    }
+
+    public function journalEntries(): HasMany
+    {
+        return $this->hasMany(CircleJournalEntry::class);
+    }
+
+    public function documents(): HasMany
+    {
+        return $this->hasMany(CircleDocument::class)->latest('document_date');
+    }
+
     public function isManagedBy(User $user): bool
     {
         return $user->isAdmin() || $this->referent_id === $user->id;

@@ -17,14 +17,19 @@ use App\Http\Controllers\MagicLinkController;
 use App\Http\Controllers\Member\AccountController;
 use App\Http\Controllers\Member\CircleActionController;
 use App\Http\Controllers\Member\CircleController;
+use App\Http\Controllers\Member\CircleDocumentController as MemberCircleDocumentController;
+use App\Http\Controllers\Member\CircleJournalEntryController;
 use App\Http\Controllers\Member\DashboardController;
 use App\Http\Controllers\Member\EventController;
 use App\Http\Controllers\Member\GeneralFeedController;
+use App\Http\Controllers\Member\MeetingController;
+use App\Http\Controllers\Member\MeetingReportController;
 use App\Http\Controllers\Member\NotificationController;
 use App\Http\Controllers\Member\PasswordController;
 use App\Http\Controllers\Member\PostController;
 use App\Http\Controllers\PublicAgendaController;
 use App\Http\Controllers\Referent\CircleController as ReferentCircleController;
+use App\Http\Controllers\Referent\CircleDocumentController as ReferentCircleDocumentController;
 use App\Http\Controllers\Referent\CircleRequestController as ReferentCircleRequestController;
 use App\Http\Controllers\RegistrationController;
 use Illuminate\Support\Facades\Route;
@@ -85,6 +90,7 @@ Route::middleware('auth')->prefix('mon-espace')->name('member.')->group(function
     Route::post('/cercles/{circle}/rejoindre', [CircleController::class, 'join'])->name('circles.join');
     Route::delete('/cercles/{circle}/quitter', [CircleController::class, 'leave'])->name('circles.leave');
     Route::delete('/cercles/{circle}/annuler-demande', [CircleController::class, 'cancelRequest'])->name('circles.cancel');
+    Route::get('/cercles/{circle}/annuaire', [CircleController::class, 'directory'])->name('circles.directory');
     Route::post('/notifications/{notification}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
     Route::get('/mon-profil', fn () => view('member.profile'))->name('profile');
     Route::post('/mot-de-passe', [PasswordController::class, 'update'])->name('password.update');
@@ -99,10 +105,35 @@ Route::middleware('auth')->prefix('mon-espace')->name('member.')->group(function
     Route::put('/agenda/{event}', [EventController::class, 'update'])->name('agenda.update');
     Route::delete('/agenda/{event}', [EventController::class, 'destroy'])->name('agenda.destroy');
 
+    // Journal de bord
+    Route::get('/cercles/{circle}/journal', [CircleJournalEntryController::class, 'index'])->name('circles.journal.index');
+    Route::get('/cercles/{circle}/journal/creer', [CircleJournalEntryController::class, 'create'])->name('circles.journal.create');
+    Route::post('/cercles/{circle}/journal', [CircleJournalEntryController::class, 'store'])->name('circles.journal.store');
+    Route::get('/cercles/{circle}/journal/{entry}/modifier', [CircleJournalEntryController::class, 'edit'])->name('circles.journal.edit');
+    Route::put('/cercles/{circle}/journal/{entry}', [CircleJournalEntryController::class, 'update'])->name('circles.journal.update');
+    Route::delete('/cercles/{circle}/journal/{entry}', [CircleJournalEntryController::class, 'destroy'])->name('circles.journal.destroy');
+
+    // Réunions
+    Route::get('/cercles/{circle}/reunions', [MeetingController::class, 'index'])->name('circles.meetings.index');
+    Route::get('/cercles/{circle}/reunions/creer', [MeetingController::class, 'create'])->name('meetings.create');
+    Route::post('/cercles/{circle}/reunions', [MeetingController::class, 'store'])->name('meetings.store');
+    Route::get('/reunions/{meeting}', [MeetingController::class, 'show'])->name('meetings.show');
+
+    // Comptes-rendus de réunion
+    Route::get('/reunions/{meeting}/compte-rendus/creer', [MeetingReportController::class, 'create'])->name('meeting-reports.create');
+    Route::post('/reunions/{meeting}/compte-rendus', [MeetingReportController::class, 'store'])->name('meeting-reports.store');
+    Route::get('/compte-rendus/{report}', [MeetingReportController::class, 'show'])->name('meeting-reports.show');
+    Route::get('/compte-rendus/{report}/modifier', [MeetingReportController::class, 'edit'])->name('meeting-reports.edit');
+    Route::put('/compte-rendus/{report}', [MeetingReportController::class, 'update'])->name('meeting-reports.update');
+    Route::post('/compte-rendus/{report}/publier', [MeetingReportController::class, 'publish'])->name('meeting-reports.publish');
+
     // Actions de cercle
     Route::post('/cercles/{circle}/actions', [CircleActionController::class, 'store'])->name('circle.actions.store');
     Route::patch('/actions/{action}', [CircleActionController::class, 'update'])->name('circle.actions.update');
     Route::delete('/actions/{action}', [CircleActionController::class, 'destroy'])->name('circle.actions.destroy');
+
+    // Bibliothèque de documents
+    Route::get('/cercles/{circle}/documents', [MemberCircleDocumentController::class, 'index'])->name('circles.documents.index');
 
     // Feed cercle + feed général
     Route::get('/cercles/{circle}', [PostController::class, 'index'])->name('circles.show');
@@ -121,6 +152,11 @@ Route::middleware(['auth', 'referent'])->prefix('referent')->name('referent.')->
     Route::post('/demandes/{membership}/refuser', [ReferentCircleRequestController::class, 'reject'])->name('requests.reject');
     Route::get('/circle/edit', [ReferentCircleController::class, 'edit'])->name('circle.edit');
     Route::put('/circle', [ReferentCircleController::class, 'update'])->name('circle.update');
+
+    // Bibliothèque de documents
+    Route::get('/circle/{circle}/documents/creer', [ReferentCircleDocumentController::class, 'create'])->name('circle.documents.create');
+    Route::post('/circle/{circle}/documents', [ReferentCircleDocumentController::class, 'store'])->name('circle.documents.store');
+    Route::delete('/circle/{circle}/documents/{document}', [ReferentCircleDocumentController::class, 'destroy'])->name('circle.documents.destroy');
 });
 
 /* ============================================================

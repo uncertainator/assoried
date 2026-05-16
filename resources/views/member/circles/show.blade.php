@@ -156,8 +156,28 @@
 </div>
 
 {{-- ========================================================== --}}
-{{-- Section 4 : Actions --}}
+{{-- Section 4 : Réunions --}}
 {{-- ========================================================== --}}
+@can('viewAny', [App\Models\Meeting::class, $circle])
+<div style="margin-bottom:40px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;">
+        <h2 style="font-size:15px;font-weight:600;margin:0;color:var(--fg-secondary);">Réunions</h2>
+        <div style="display:flex;align-items:center;gap:8px;">
+            @can('create', [App\Models\Meeting::class, $circle])
+                <a href="{{ route('member.meetings.create', $circle) }}" class="fb-btn fb-btn-primary fb-btn-sm">+ Nouvelle réunion</a>
+            @endcan
+            <a href="{{ route('member.circles.meetings.index', $circle) }}" class="fb-btn fb-btn-ghost fb-btn-sm">Voir les réunions →</a>
+        </div>
+    </div>
+    <p style="font-size:14px;color:var(--fg-tertiary);">
+        Retrouvez l'ordre du jour et les comptes-rendus des réunions du cercle.
+    </p>
+</div>
+@endcan
+
+{{-- ========================================================== --}}
+{{-- Section 5 : Actions --}}
+{{-- ============================================================ --}}
 <div style="margin-bottom:40px;">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;">
         <h2 style="font-size:15px;font-weight:600;margin:0;color:var(--fg-secondary);">Actions</h2>
@@ -257,7 +277,66 @@
 </div>
 
 {{-- ========================================================== --}}
-{{-- Section 5 : Quitter le cercle --}}
+{{-- Section 6 : Journal de bord --}}
+{{-- ========================================================== --}}
+<div style="margin-bottom:40px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;">
+        <h2 style="font-size:15px;font-weight:600;margin:0;color:var(--fg-secondary);">Journal de bord</h2>
+        <div style="display:flex;align-items:center;gap:8px;">
+            @can('create', [App\Models\CircleJournalEntry::class, $circle])
+                <a href="{{ route('member.circles.journal.create', $circle) }}" class="fb-btn fb-btn-primary fb-btn-sm">
+                    + Nouvelle entrée
+                </a>
+            @endcan
+            <a href="{{ route('member.circles.journal.index', $circle) }}" class="fb-btn fb-btn-ghost fb-btn-sm">
+                Voir le journal →
+            </a>
+        </div>
+    </div>
+    <p style="font-size:14px;color:var(--fg-tertiary);">
+        Retrouvez les comptes-rendus et entrées du cercle dans le journal de bord.
+    </p>
+</div>
+
+{{-- ========================================================== --}}
+{{-- Section 7 : Bibliothèque de documents --}}
+{{-- ========================================================== --}}
+<div style="margin-bottom:40px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;">
+        <h2 style="font-size:15px;font-weight:600;margin:0;color:var(--fg-secondary);">Bibliothèque</h2>
+        <div style="display:flex;align-items:center;gap:8px;">
+            @can('create', [App\Models\CircleDocument::class, $circle])
+                <a href="{{ route('referent.circle.documents.create', $circle) }}" class="fb-btn fb-btn-primary fb-btn-sm">
+                    + Ajouter un document
+                </a>
+            @endcan
+            <a href="{{ route('member.circles.documents.index', $circle) }}" class="fb-btn fb-btn-ghost fb-btn-sm">
+                Voir les documents →
+            </a>
+        </div>
+    </div>
+    <p style="font-size:14px;color:var(--fg-tertiary);">
+        Retrouvez les fichiers PDF et liens partagés par le cercle.
+    </p>
+</div>
+
+{{-- ========================================================== --}}
+{{-- Section 8 : Annuaire --}}
+{{-- ========================================================== --}}
+<div style="margin-bottom:40px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;">
+        <h2 style="font-size:15px;font-weight:600;margin:0;color:var(--fg-secondary);">Annuaire</h2>
+        <a href="{{ route('member.circles.directory', $circle) }}" class="fb-btn fb-btn-ghost fb-btn-sm">
+            Voir l'annuaire →
+        </a>
+    </div>
+    <p style="font-size:14px;color:var(--fg-tertiary);">
+        Retrouvez les membres du cercle et leurs coordonnées (si partagées).
+    </p>
+</div>
+
+{{-- ========================================================== --}}
+{{-- Section 9 : Quitter le cercle --}}
 {{-- ========================================================== --}}
 @if ($membership && ! $circle->isManagedBy(auth()->user()))
     <div x-data="{ open: false }" style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border-subtle);">

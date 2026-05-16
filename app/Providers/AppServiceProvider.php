@@ -4,16 +4,24 @@ namespace App\Providers;
 
 use App\Models\Circle;
 use App\Models\CircleAction;
+use App\Models\CircleDocument;
+use App\Models\CircleJournalEntry;
 use App\Models\CircleMembership;
 use App\Models\Event;
 use App\Models\LabService;
+use App\Models\Meeting;
+use App\Models\MeetingReport;
 use App\Models\Post;
 use App\Models\User;
 use App\Policies\CircleActionPolicy;
+use App\Policies\CircleDocumentPolicy;
+use App\Policies\CircleJournalEntryPolicy;
 use App\Policies\CircleMembershipPolicy;
 use App\Policies\CirclePolicy;
 use App\Policies\EventPolicy;
 use App\Policies\LabServicePolicy;
+use App\Policies\MeetingPolicy;
+use App\Policies\MeetingReportPolicy;
 use App\Policies\PostPolicy;
 use App\Policies\UserRolePolicy;
 use Illuminate\Support\Facades\Gate;
@@ -41,5 +49,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Event::class, EventPolicy::class);
         Gate::policy(CircleAction::class, CircleActionPolicy::class);
         Gate::policy(LabService::class, LabServicePolicy::class);
+        Gate::policy(Meeting::class, MeetingPolicy::class);
+        Gate::policy(MeetingReport::class, MeetingReportPolicy::class);
+        Gate::policy(CircleJournalEntry::class, CircleJournalEntryPolicy::class);
+        Gate::policy(CircleDocument::class, CircleDocumentPolicy::class);
     }
 }
