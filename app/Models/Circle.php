@@ -63,6 +63,11 @@ class Circle extends Model
         return $this->hasMany(CircleDocument::class)->latest('document_date');
     }
 
+    public function polls(): HasMany
+    {
+        return $this->hasMany(Poll::class);
+    }
+
     public function isManagedBy(User $user): bool
     {
         return $user->isAdmin() || $this->referent_id === $user->id;

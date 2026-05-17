@@ -33,6 +33,14 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2z"/><path d="M12 14c-5 0-8 2.5-8 4v1h16v-1c0-1.5-3-4-8-4z"/><path d="M17 8l2 2 4-4"/></svg>
             Rôles &amp; Référents
         </a>
+        <a href="{{ route('admin.stats') }}" class="admin-nav-link {{ request()->routeIs('admin.stats*') ? 'active' : '' }}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            Statistiques
+        </a>
+        <a href="{{ route('admin.parcours.index') }}" class="admin-nav-link {{ request()->routeIs('admin.parcours.*') ? 'active' : '' }}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>
+            Parcours guidé
+        </a>
 
         <div class="admin-nav-head" style="margin-top:auto;">Compte</div>
         <a href="{{ route('member.dashboard') }}" class="admin-nav-link">

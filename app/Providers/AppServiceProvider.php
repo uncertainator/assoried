@@ -11,6 +11,9 @@ use App\Models\Event;
 use App\Models\LabService;
 use App\Models\Meeting;
 use App\Models\MeetingReport;
+use App\Models\ParcoursQuestion;
+use App\Models\ParcoursService;
+use App\Models\Poll;
 use App\Models\Post;
 use App\Models\User;
 use App\Policies\CircleActionPolicy;
@@ -22,6 +25,9 @@ use App\Policies\EventPolicy;
 use App\Policies\LabServicePolicy;
 use App\Policies\MeetingPolicy;
 use App\Policies\MeetingReportPolicy;
+use App\Policies\ParcoursQuestionPolicy;
+use App\Policies\ParcoursServicePolicy;
+use App\Policies\PollPolicy;
 use App\Policies\PostPolicy;
 use App\Policies\UserRolePolicy;
 use Illuminate\Support\Facades\Gate;
@@ -53,5 +59,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(MeetingReport::class, MeetingReportPolicy::class);
         Gate::policy(CircleJournalEntry::class, CircleJournalEntryPolicy::class);
         Gate::policy(CircleDocument::class, CircleDocumentPolicy::class);
+        Gate::policy(Poll::class, PollPolicy::class);
+        Gate::policy(ParcoursService::class, ParcoursServicePolicy::class);
+        Gate::policy(ParcoursQuestion::class, ParcoursQuestionPolicy::class);
     }
 }

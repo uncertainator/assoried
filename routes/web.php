@@ -2,7 +2,12 @@
 
 use App\Http\Controllers\Admin\CircleController as AdminCircleController;
 use App\Http\Controllers\Admin\CircleRequestController as AdminCircleRequestController;
+use App\Http\Controllers\Admin\LabToolController as AdminLabToolController;
 use App\Http\Controllers\Admin\MemberController as AdminMemberController;
+use App\Http\Controllers\Admin\PageController as AdminPageController;
+use App\Http\Controllers\Admin\ParcoursQuestionController as AdminParcoursQuestionController;
+use App\Http\Controllers\Admin\ParcoursServiceController as AdminParcoursServiceController;
+use App\Http\Controllers\Admin\StatsController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\PasswordLoginController;
@@ -13,6 +18,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LabExternalRequestController;
 use App\Http\Controllers\LabInternalRequestController;
 use App\Http\Controllers\LabServiceController;
+use App\Http\Controllers\LabToolController;
 use App\Http\Controllers\MagicLinkController;
 use App\Http\Controllers\Member\AccountController;
 use App\Http\Controllers\Member\CircleActionController;
@@ -26,7 +32,10 @@ use App\Http\Controllers\Member\MeetingController;
 use App\Http\Controllers\Member\MeetingReportController;
 use App\Http\Controllers\Member\NotificationController;
 use App\Http\Controllers\Member\PasswordController;
+use App\Http\Controllers\Member\PollController;
 use App\Http\Controllers\Member\PostController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\ParcoursController;
 use App\Http\Controllers\PublicAgendaController;
 use App\Http\Controllers\Referent\CircleController as ReferentCircleController;
 use App\Http\Controllers\Referent\CircleDocumentController as ReferentCircleDocumentController;
@@ -40,9 +49,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/agenda-public', [PublicAgendaController::class, 'index'])->name('public.agenda');
 Route::get('/evenements', fn () => view('coming-soon', ['title' => 'Événements', 'soon' => 'L\'agenda des événements']))->name('evenements');
-Route::get('/mentions-legales', fn () => view('legal.mentions'))->name('legal.mentions');
-Route::get('/politique-confidentialite', fn () => view('legal.privacy'))->name('legal.privacy');
-
 Route::get('/inscription', [RegistrationController::class, 'show'])->name('inscription');
 Route::post('/inscription', [RegistrationController::class, 'store'])->name('inscription.store');
 
@@ -60,6 +66,18 @@ Route::post('/lab/entreprise', [LabExternalRequestController::class, 'storeEntre
     ->name('lab.external.entreprise.store');
 
 Route::get('/lab/demande-recue', fn () => view('lab.external.confirmation'))->name('lab.external.confirmation');
+
+/* ============================================================
+   Chemin de services guidé — public (sans authentification)
+   ============================================================ */
+Route::prefix('chemin-services')->name('parcours.')->group(function () {
+    Route::get('/', [ParcoursController::class, 'start'])->name('start');
+    Route::get('/etape/{question}', [ParcoursController::class, 'step'])->name('step');
+    Route::post('/etape/{question}/choisir', [ParcoursController::class, 'choose'])->name('choose');
+    Route::get('/retour', [ParcoursController::class, 'back'])->name('back');
+    Route::get('/resultat/{service}', [ParcoursController::class, 'result'])->name('result');
+    Route::get('/contact', [ParcoursController::class, 'fallback'])->name('fallback');
+});
 
 /* ============================================================
    Auth — connexion (magic link + mot de passe)
@@ -141,6 +159,15 @@ Route::middleware('auth')->prefix('mon-espace')->name('member.')->group(function
     Route::patch('/posts/{post}/pousser', [PostController::class, 'pushToGeneral'])->name('posts.push');
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
     Route::get('/feed', [GeneralFeedController::class, 'index'])->name('feed');
+
+    // Sondages
+    Route::get('/sondages', [PollController::class, 'index'])->name('polls.index');
+    Route::get('/sondages/creer', [PollController::class, 'create'])->name('polls.create');
+    Route::post('/sondages', [PollController::class, 'store'])->name('polls.store');
+    Route::get('/cercles/{circle}/sondages/creer', [PollController::class, 'createForCircle'])->name('circles.polls.create');
+    Route::post('/cercles/{circle}/sondages', [PollController::class, 'storeForCircle'])->name('circles.polls.store');
+    Route::get('/sondages/{poll}', [PollController::class, 'show'])->name('polls.show');
+    Route::post('/sondages/{poll}/voter', [PollController::class, 'vote'])->name('polls.vote');
 });
 
 /* ============================================================
@@ -157,6 +184,16 @@ Route::middleware(['auth', 'referent'])->prefix('referent')->name('referent.')->
     Route::get('/circle/{circle}/documents/creer', [ReferentCircleDocumentController::class, 'create'])->name('circle.documents.create');
     Route::post('/circle/{circle}/documents', [ReferentCircleDocumentController::class, 'store'])->name('circle.documents.store');
     Route::delete('/circle/{circle}/documents/{document}', [ReferentCircleDocumentController::class, 'destroy'])->name('circle.documents.destroy');
+});
+
+/* ============================================================
+   Lab — boîte à outils méthodo (tout membre connecté)
+   ============================================================ */
+Route::middleware('auth')->prefix('le-lab/outils')->name('lab.tools.')->group(function () {
+    Route::get('/', [LabToolController::class, 'index'])->name('index');
+    Route::get('/{tool}/download', [LabToolController::class, 'download'])
+        ->middleware('signed')
+        ->name('download');
 });
 
 /* ============================================================
@@ -201,6 +238,22 @@ Route::middleware('auth')->group(function () {
 });
 
 /* ============================================================
+   Lab — gestion des outils (admin + référent Lab)
+   ============================================================ */
+Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('/lab/outils', AdminLabToolController::class)
+        ->parameters(['outils' => 'tool'])
+        ->names([
+            'index' => 'lab.tools.index',
+            'create' => 'lab.tools.create',
+            'store' => 'lab.tools.store',
+            'edit' => 'lab.tools.edit',
+            'update' => 'lab.tools.update',
+            'destroy' => 'lab.tools.destroy',
+        ]);
+});
+
+/* ============================================================
    Admin routes
    ============================================================ */
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -220,8 +273,47 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
             'update' => 'circles.update',
         ]);
 
+    Route::get('/pages', [AdminPageController::class, 'index'])->name('pages.index');
+    Route::get('/pages/{page}/modifier', [AdminPageController::class, 'edit'])->name('pages.edit');
+    Route::put('/pages/{page}', [AdminPageController::class, 'update'])->name('pages.update');
+
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
     Route::get('/users/{user}/promote', [AdminUserController::class, 'promoteForm'])->name('users.promote.form');
     Route::post('/users/{user}/promote', [AdminUserController::class, 'promote'])->name('users.promote');
     Route::post('/users/{user}/demote', [AdminUserController::class, 'demote'])->name('users.demote');
+
+    Route::get('/stats', [StatsController::class, 'index'])->name('stats');
+
+    // Parcours guidé — admin
+    Route::get('/parcours', [AdminParcoursQuestionController::class, 'index'])->name('parcours.index');
+    Route::get('/parcours/previsualiser', [AdminParcoursQuestionController::class, 'preview'])->name('parcours.preview');
+    Route::resource('/parcours/services', AdminParcoursServiceController::class)
+        ->parameters(['services' => 'service'])
+        ->except(['show'])
+        ->names([
+            'index' => 'parcours.services.index',
+            'create' => 'parcours.services.create',
+            'store' => 'parcours.services.store',
+            'edit' => 'parcours.services.edit',
+            'update' => 'parcours.services.update',
+            'destroy' => 'parcours.services.destroy',
+        ]);
+    Route::resource('/parcours/questions', AdminParcoursQuestionController::class)
+        ->parameters(['questions' => 'question'])
+        ->except(['show'])
+        ->names([
+            'index' => 'parcours.questions.index',
+            'create' => 'parcours.questions.create',
+            'store' => 'parcours.questions.store',
+            'edit' => 'parcours.questions.edit',
+            'update' => 'parcours.questions.update',
+            'destroy' => 'parcours.questions.destroy',
+        ]);
+    Route::post('/parcours/questions/{question}/racine', [AdminParcoursQuestionController::class, 'setRoot'])
+        ->name('parcours.questions.set-root');
 });
+
+/* ============================================================
+   Pages statiques (catch-all — doit rester en dernier)
+   ============================================================ */
+Route::get('/{slug}', [PageController::class, 'show'])->name('pages.show');

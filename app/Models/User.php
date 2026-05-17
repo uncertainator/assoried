@@ -66,6 +66,11 @@ class User extends Authenticatable
         return $this->hasMany(CircleMembership::class);
     }
 
+    public function polls(): HasMany
+    {
+        return $this->hasMany(Poll::class, 'created_by');
+    }
+
     public function scopeAdmin($query)
     {
         return $query->where('role', UserRole::Admin);

@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(CircleSeeder::class);
+        $this->call(PageSeeder::class);
 
         User::factory()->create([
             'name' => 'Admin',

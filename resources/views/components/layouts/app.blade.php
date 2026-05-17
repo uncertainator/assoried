@@ -17,6 +17,7 @@
     <nav class="fb-nav-links">
         <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Accueil</a>
         <a href="{{ route('evenements') }}" class="{{ request()->routeIs('evenements') ? 'active' : '' }}">Événements</a>
+        <a href="{{ route('parcours.start') }}" class="{{ request()->routeIs('parcours.*') ? 'active' : '' }}">Nos services</a>
         <div class="fb-nav-dropdown {{ request()->routeIs('lab.external.*') ? 'active' : '' }}">
             <span class="fb-nav-dropdown-trigger">
                 Lab
@@ -67,17 +68,18 @@
                 <div class="fb-footer-head">L'association</div>
                 <a href="{{ route('home') }}">Qui sommes-nous</a>
                 <a href="{{ route('inscription') }}">Adhérer</a>
-                <a href="{{ route('legal.mentions') }}">Mentions légales</a>
+                <a href="{{ route('pages.show', 'mentions-legales') }}">Mentions légales</a>
             </div>
             <div>
                 <div class="fb-footer-head">Activités</div>
                 <a href="{{ route('evenements') }}">Événements</a>
                 <a href="{{ route('inscription') }}">Cercles thématiques</a>
+                <a href="{{ route('parcours.start') }}">Trouver mon service</a>
             </div>
             <div>
                 <div class="fb-footer-head">Nous joindre</div>
                 <a href="#">Alsace · Bas-Rhin</a>
-                <a href="{{ route('legal.privacy') }}">Confidentialité</a>
+                <a href="{{ route('pages.show', 'confidentialite') }}">Confidentialité</a>
             </div>
         </div>
     </div>

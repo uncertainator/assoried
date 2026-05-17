@@ -46,6 +46,12 @@
             </svg>
             Agenda
         </a>
+        <a href="{{ route('member.polls.index') }}" class="ea-nav-item {{ request()->routeIs('member.polls.*') ? 'active' : '' }}">
+            <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 6h18M3 12h12M3 18h8"/><circle cx="19" cy="18" r="3"/><path d="m21 20-1.5-1.5"/>
+            </svg>
+            Sondages
+        </a>
         <a href="{{ route('lab.services.index') }}" class="ea-nav-item {{ request()->routeIs('lab.services.*') ? 'active' : '' }}">
             <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2M8 7V5a2 2 0 0 0-4 0v2"/>
