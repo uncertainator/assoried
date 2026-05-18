@@ -15,6 +15,7 @@ use App\Models\ParcoursQuestion;
 use App\Models\ParcoursService;
 use App\Models\Poll;
 use App\Models\Post;
+use App\Models\Scrutin;
 use App\Models\User;
 use App\Policies\CircleActionPolicy;
 use App\Policies\CircleDocumentPolicy;
@@ -29,6 +30,7 @@ use App\Policies\ParcoursQuestionPolicy;
 use App\Policies\ParcoursServicePolicy;
 use App\Policies\PollPolicy;
 use App\Policies\PostPolicy;
+use App\Policies\ScrutinPolicy;
 use App\Policies\UserRolePolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -62,5 +64,6 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Poll::class, PollPolicy::class);
         Gate::policy(ParcoursService::class, ParcoursServicePolicy::class);
         Gate::policy(ParcoursQuestion::class, ParcoursQuestionPolicy::class);
+        Gate::policy(Scrutin::class, ScrutinPolicy::class);
     }
 }

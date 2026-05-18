@@ -52,6 +52,12 @@
             </svg>
             Sondages
         </a>
+        <a href="{{ route('member.scrutins.index') }}" class="ea-nav-item {{ request()->routeIs('member.scrutins.*') ? 'active' : '' }}">
+            <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 12l2 2 4-4"/><rect x="3" y="3" width="18" height="18" rx="2"/>
+            </svg>
+            Scrutins
+        </a>
         <a href="{{ route('lab.services.index') }}" class="ea-nav-item {{ request()->routeIs('lab.services.*') ? 'active' : '' }}">
             <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2M8 7V5a2 2 0 0 0-4 0v2"/>

@@ -102,6 +102,33 @@
     {{-- Colonne 2 : Mes cercles + Mes demandes --}}
     <div>
 
+        {{-- Consultations ouvertes --}}
+        @if ($consultationsOuvertes->isNotEmpty())
+        <div class="ea-panel" style="margin-bottom:16px;">
+            <div class="ea-panel-head">
+                <h2 class="ea-panel-title">Consultations ouvertes</h2>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+                @foreach ($consultationsOuvertes as $consultation)
+                    <div style="border:1px solid var(--border-subtle);border-radius:8px;padding:12px 14px;">
+                        <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+                            <span class="{{ $consultation->mode_recueil->badgeClass() }}" style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;">
+                                {{ $consultation->mode_recueil->label() }}
+                            </span>
+                            @if ($consultation->date_cloture)
+                                <span style="font-size:11px;color:var(--fg-tertiary);">jusqu'au {{ $consultation->date_cloture->translatedFormat('j M') }}</span>
+                            @endif
+                        </div>
+                        <div style="font-size:14px;font-weight:600;margin-bottom:8px;">{{ $consultation->titre }}</div>
+                        <a href="{{ route('consultations.show', $consultation) }}" class="fb-btn fb-btn-outline fb-btn-sm">
+                            Participer →
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
         {{-- Mes cercles (agrandi avec aperçu événements) --}}
         <div class="ea-panel" style="margin-bottom:16px;">
             <div class="ea-panel-head">

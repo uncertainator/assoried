@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ConsultationAdminController;
 use App\Http\Controllers\Admin\CircleController as AdminCircleController;
 use App\Http\Controllers\Admin\CircleRequestController as AdminCircleRequestController;
 use App\Http\Controllers\Admin\LabToolController as AdminLabToolController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\Admin\MemberController as AdminMemberController;
 use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Admin\ParcoursQuestionController as AdminParcoursQuestionController;
 use App\Http\Controllers\Admin\ParcoursServiceController as AdminParcoursServiceController;
+use App\Http\Controllers\Admin\ScrutinController as AdminScrutinController;
 use App\Http\Controllers\Admin\StatsController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -14,6 +16,7 @@ use App\Http\Controllers\Auth\PasswordLoginController;
 use App\Http\Controllers\Auth\PasswordSetupController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ConsultationPublicController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LabExternalRequestController;
 use App\Http\Controllers\LabInternalRequestController;
@@ -34,6 +37,7 @@ use App\Http\Controllers\Member\NotificationController;
 use App\Http\Controllers\Member\PasswordController;
 use App\Http\Controllers\Member\PollController;
 use App\Http\Controllers\Member\PostController;
+use App\Http\Controllers\Member\ScrutinController as MemberScrutinController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ParcoursController;
 use App\Http\Controllers\PublicAgendaController;
@@ -168,6 +172,11 @@ Route::middleware('auth')->prefix('mon-espace')->name('member.')->group(function
     Route::post('/cercles/{circle}/sondages', [PollController::class, 'storeForCircle'])->name('circles.polls.store');
     Route::get('/sondages/{poll}', [PollController::class, 'show'])->name('polls.show');
     Route::post('/sondages/{poll}/voter', [PollController::class, 'vote'])->name('polls.vote');
+
+    // Scrutins formels
+    Route::get('/scrutins', [MemberScrutinController::class, 'index'])->name('scrutins.index');
+    Route::get('/scrutins/{scrutin}', [MemberScrutinController::class, 'show'])->name('scrutins.show');
+    Route::post('/scrutins/{scrutin}/voter', [MemberScrutinController::class, 'vote'])->name('scrutins.vote');
 });
 
 /* ============================================================
@@ -311,6 +320,42 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         ]);
     Route::post('/parcours/questions/{question}/racine', [AdminParcoursQuestionController::class, 'setRoot'])
         ->name('parcours.questions.set-root');
+
+    // Consultations publiques — admin
+    Route::post('/consultations/reponses/{reponse}/masquer', [ConsultationAdminController::class, 'masquerReponse'])->name('consultations.reponses.masquer');
+    Route::post('/consultations/reponses/{reponse}/demasquer', [ConsultationAdminController::class, 'demasquerReponse'])->name('consultations.reponses.demasquer');
+    Route::get('/consultations', [ConsultationAdminController::class, 'index'])->name('consultations.index');
+    Route::get('/consultations/creer', [ConsultationAdminController::class, 'create'])->name('consultations.create');
+    Route::post('/consultations', [ConsultationAdminController::class, 'store'])->name('consultations.store');
+    Route::get('/consultations/{consultation}', [ConsultationAdminController::class, 'show'])->name('consultations.show');
+    Route::get('/consultations/{consultation}/modifier', [ConsultationAdminController::class, 'edit'])->name('consultations.edit');
+    Route::put('/consultations/{consultation}', [ConsultationAdminController::class, 'update'])->name('consultations.update');
+    Route::post('/consultations/{consultation}/cloturer', [ConsultationAdminController::class, 'cloturer'])->name('consultations.cloturer');
+    Route::get('/consultations/{consultation}/terrain', [ConsultationAdminController::class, 'saisirTerrain'])->name('consultations.terrain');
+    Route::post('/consultations/{consultation}/terrain', [ConsultationAdminController::class, 'storeTerrain'])->name('consultations.terrain.store');
+
+    // Scrutins formels
+    Route::get('/scrutins', [AdminScrutinController::class, 'index'])->name('scrutins.index');
+    Route::get('/scrutins/creer', [AdminScrutinController::class, 'create'])->name('scrutins.create');
+    Route::post('/scrutins', [AdminScrutinController::class, 'store'])->name('scrutins.store');
+    Route::get('/scrutins/{scrutin}', [AdminScrutinController::class, 'show'])->name('scrutins.show');
+    Route::get('/scrutins/{scrutin}/modifier', [AdminScrutinController::class, 'edit'])->name('scrutins.edit');
+    Route::put('/scrutins/{scrutin}', [AdminScrutinController::class, 'update'])->name('scrutins.update');
+    Route::post('/scrutins/{scrutin}/publier', [AdminScrutinController::class, 'publish'])->name('scrutins.publish');
+    Route::post('/scrutins/{scrutin}/cloturer', [AdminScrutinController::class, 'close'])->name('scrutins.close');
+    Route::post('/scrutins/{scrutin}/annuler', [AdminScrutinController::class, 'cancel'])->name('scrutins.cancel');
+});
+
+/* ============================================================
+   Consultations publiques
+   ============================================================ */
+Route::prefix('consultations')->name('consultations.')->group(function () {
+    Route::get('/{consultation}', [ConsultationPublicController::class, 'show'])->name('show');
+    Route::post('/{consultation}/soumettre', [ConsultationPublicController::class, 'soumettre'])
+        ->middleware('throttle:20,1')
+        ->name('soumettre');
+    Route::get('/{consultation}/resultats', [ConsultationPublicController::class, 'resultats'])->name('resultats');
+    Route::get('/{consultation}/terrain', [ConsultationPublicController::class, 'terrainPrint'])->name('terrain.print');
 });
 
 /* ============================================================

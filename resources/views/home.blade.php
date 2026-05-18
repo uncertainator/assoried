@@ -143,6 +143,50 @@
     </div>
 </section>
 
+{{-- Consultations publiques --}}
+@if ($consultations->isNotEmpty())
+<section class="fb-section-creme">
+    <div style="max-width:1280px;margin:0 auto;padding:0;">
+        <div class="fb-section-head">
+            <div class="fb-eyebrow">Participation</div>
+            <h2 class="fb-h2">Donnez votre avis</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;">
+            @foreach ($consultations as $consultation)
+                <article style="background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:12px;padding:20px 24px;display:flex;flex-direction:column;gap:12px;">
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                        <span class="{{ $consultation->mode_recueil->badgeClass() }}" style="font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px;">
+                            {{ $consultation->mode_recueil->label() }}
+                        </span>
+                        @if ($consultation->date_cloture)
+                            <span style="font-size:11px;color:var(--fg-tertiary);">
+                                Jusqu'au {{ $consultation->date_cloture->translatedFormat('j M Y') }}
+                            </span>
+                        @endif
+                    </div>
+                    <h3 style="font-size:16px;font-weight:600;color:var(--fg-primary);margin:0;line-height:1.4;">
+                        {{ $consultation->titre }}
+                    </h3>
+                    @if ($consultation->description)
+                        <p style="font-size:14px;color:var(--fg-secondary);margin:0;line-height:1.6;">
+                            {{ Str::limit($consultation->description, 120) }}
+                        </p>
+                    @endif
+                    <div style="display:flex;gap:8px;margin-top:auto;">
+                        <a href="{{ route('consultations.show', $consultation) }}" class="fb-btn fb-btn-primary fb-btn-sm">
+                            Participer →
+                        </a>
+                        <a href="{{ route('consultations.resultats', $consultation) }}" class="fb-btn fb-btn-ghost fb-btn-sm">
+                            Résultats
+                        </a>
+                    </div>
+                </article>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
+
 {{-- CTA --}}
 <section class="fb-section">
     <div class="fb-cta">

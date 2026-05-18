@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Member;
 
 use App\Enums\MembershipStatus;
 use App\Http\Controllers\Controller;
+use App\Models\Consultation;
 use App\Models\Event;
 use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
@@ -46,6 +47,14 @@ class DashboardController extends Controller
                 ->map(fn ($events) => $events->take(2))
             : collect();
 
-        return view('member.dashboard', compact('user', 'recentMemberships', 'feed', 'upcomingEventsByCircle'));
+        $consultationsOuvertes = Consultation::where('masque', false)
+            ->where(function ($q) {
+                $q->whereNull('date_cloture')->orWhere('date_cloture', '>', now());
+            })
+            ->orderByDesc('created_at')
+            ->limit(3)
+            ->get();
+
+        return view('member.dashboard', compact('user', 'recentMemberships', 'feed', 'upcomingEventsByCircle', 'consultationsOuvertes'));
     }
 }

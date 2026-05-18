@@ -41,6 +41,14 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>
             Parcours guidé
         </a>
+        <a href="{{ route('admin.scrutins.index') }}" class="admin-nav-link {{ request()->routeIs('admin.scrutins.*') ? 'active' : '' }}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+            Scrutins
+        </a>
+        <a href="{{ route('admin.consultations.index') }}" class="admin-nav-link {{ request()->routeIs('admin.consultations.*') ? 'active' : '' }}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Consultations
+        </a>
 
         <div class="admin-nav-head" style="margin-top:auto;">Compte</div>
         <a href="{{ route('member.dashboard') }}" class="admin-nav-link">
