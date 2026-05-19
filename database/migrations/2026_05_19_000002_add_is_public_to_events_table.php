@@ -7,11 +7,14 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     public function up(): void
-    {
+{
+    // On vérifie si la colonne n'existe pas déjà avant de tenter de l'ajouter
+    if (!Schema::hasColumn('events', 'is_public')) {
         Schema::table('events', function (Blueprint $table) {
-            $table->boolean('is_public')->default(false)->after('location');
+            $table->boolean('is_public')->default(false);
         });
     }
+}
 
     public function down(): void
     {
