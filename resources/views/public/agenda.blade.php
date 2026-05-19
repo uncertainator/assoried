@@ -12,17 +12,37 @@
         @else
             <div class="fb-events-grid">
                 @foreach ($events as $event)
-                    <article class="fb-event-card" style="border-top-color:var(--brique-500);">
-                        <div class="fb-event-tag" style="color:var(--brique-600);text-transform:uppercase;">
-                            {{ $event->circle->name }}
+                    @php
+                        $color = match($event->tag) {
+                            'Atelier'     => ['border' => 'var(--brique-500)', 'tag' => 'var(--brique-600)'],
+                            'Information' => ['border' => 'var(--ocre-400)',   'tag' => 'var(--ocre-600)'],
+                            default       => ['border' => 'var(--mousse-500)', 'tag' => 'var(--mousse-500)'],
+                        };
+                    @endphp
+                    <article class="fb-event-card" style="border-top-color:{{ $color['border'] }};">
+                        <div class="fb-event-tag" style="color:{{ $color['tag'] }};text-transform:uppercase;">
+                            {{ $event->tag ?? $event->circle->name }}
                         </div>
                         <h2 class="fb-event-title">{{ $event->title }}</h2>
+                        @if ($event->description)
+                            <p class="fb-event-body">{{ $event->description }}</p>
+                        @endif
                         <div class="fb-event-meta">
                             <span class="fb-mono">{{ $event->starts_at->isoFormat('D MMMM YYYY · HH:mm') }}</span>
                             @if ($event->location)
                                 <span class="fb-event-place">{{ $event->location }}</span>
                             @endif
                         </div>
+                        @if ($event->foot_type)
+                            <div class="fb-event-foot">
+                                @if ($event->foot_type === 'places_limitees')
+                                    <span class="fb-badge fb-badge-mousse">Places limitées</span>
+                                @else
+                                    <span class="fb-badge fb-badge-ocre">Entrée libre</span>
+                                @endif
+                                <a href="{{ route('evenements.show', $event) }}" class="fb-btn fb-btn-ghost fb-btn-sm">Je m'inscris →</a>
+                            </div>
+                        @endif
                     </article>
                 @endforeach
             </div>

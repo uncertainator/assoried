@@ -50,10 +50,24 @@ class EventController extends Controller
             'ends_at' => $request->validated('ends_at'),
             'description' => $request->validated('description'),
             'location' => $request->validated('location'),
+            'tag' => $request->validated('tag'),
+            'foot_type' => $request->validated('foot_type'),
         ]);
 
         return redirect()->route('member.circles.agenda', $circle)
             ->with('success', 'Événement créé avec succès.');
+    }
+
+    public function show(Event $event): View
+    {
+        abort_unless(
+            auth()->id() === $event->author_id || auth()->user()?->isAdmin() || auth()->user()?->isReferent(),
+            403
+        );
+
+        $event->load(['circle', 'registrations']);
+
+        return view('member.agenda.show', compact('event'));
     }
 
     public function edit(Event $event): View

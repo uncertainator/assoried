@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Circle;
 use App\Models\Consultation;
+use App\Models\Event;
 
 class HomeController extends Controller
 {
@@ -19,6 +20,9 @@ class HomeController extends Controller
             ->limit(3)
             ->get();
 
-        return view('home', compact('circles', 'consultations'));
+        $heroEvent = Event::with('circle')->upcoming()->where('is_public', true)->first();
+        $upcomingEvents = Event::with('circle')->upcoming()->where('is_public', true)->limit(3)->get();
+
+        return view('home', compact('circles', 'consultations', 'heroEvent', 'upcomingEvents'));
     }
 }

@@ -132,5 +132,6 @@
 
 <script src="https://unpkg.com/lucide@latest" defer></script>
 <script>document.addEventListener('DOMContentLoaded', () => { if(window.lucide) lucide.createIcons(); });</script>
+@stack('modals')
 </body>
 </html>

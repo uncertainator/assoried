@@ -1,7 +1,7 @@
 @php $isPast ??= false; $showCircle ??= false; @endphp
 <div style="background:var(--surface-raised);border:1px solid var(--border-subtle);border-radius:10px;padding:16px 20px;{{ $isPast ? 'opacity:0.55;' : '' }}">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-        <div style="flex:1;min-width:0;">
+        <div style="flex:1;min-width:180px;">
             <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">
                 <span style="font-size:15px;font-weight:600;color:var(--fg-primary);">{{ $event->title }}</span>
                 @if ($isPast)
@@ -28,6 +28,7 @@
         </div>
         <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
             @can('update', $event)
+                <a href="{{ route('member.agenda.show', $event) }}" class="fb-btn fb-btn-ghost fb-btn-sm">Inscrits</a>
                 <a href="{{ route('member.agenda.edit', $event) }}" class="fb-btn fb-btn-ghost fb-btn-sm">Modifier</a>
             @endcan
             @can('delete', $event)

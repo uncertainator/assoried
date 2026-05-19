@@ -41,6 +41,7 @@ use App\Http\Controllers\Member\ScrutinController as MemberScrutinController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ParcoursController;
 use App\Http\Controllers\PublicAgendaController;
+use App\Http\Controllers\PublicEventController;
 use App\Http\Controllers\Referent\CircleController as ReferentCircleController;
 use App\Http\Controllers\Referent\CircleDocumentController as ReferentCircleDocumentController;
 use App\Http\Controllers\Referent\CircleRequestController as ReferentCircleRequestController;
@@ -53,6 +54,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/agenda-public', [PublicAgendaController::class, 'index'])->name('public.agenda');
 Route::get('/evenements', fn () => view('coming-soon', ['title' => 'Événements', 'soon' => 'L\'agenda des événements']))->name('evenements');
+Route::get('/evenements/{event}', [PublicEventController::class, 'show'])->name('evenements.show');
+Route::post('/evenements/{event}/inscription', [PublicEventController::class, 'register'])
+    ->middleware('throttle:20,1')
+    ->name('evenements.register');
 Route::get('/inscription', [RegistrationController::class, 'show'])->name('inscription');
 Route::post('/inscription', [RegistrationController::class, 'store'])->name('inscription.store');
 
@@ -120,6 +125,7 @@ Route::middleware('auth')->prefix('mon-espace')->name('member.')->group(function
 
     // Agenda
     Route::get('/agenda', [EventController::class, 'index'])->name('agenda.index');
+    Route::get('/agenda/{event}', [EventController::class, 'show'])->name('agenda.show');
     Route::get('/cercles/{circle}/agenda', [EventController::class, 'circleIndex'])->name('circles.agenda');
     Route::get('/cercles/{circle}/agenda/creer', [EventController::class, 'create'])->name('agenda.create');
     Route::post('/cercles/{circle}/agenda', [EventController::class, 'store'])->name('agenda.store');

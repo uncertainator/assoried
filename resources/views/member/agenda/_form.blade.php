@@ -76,6 +76,40 @@
     @enderror
 </div>
 
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+    <div class="fb-field">
+        <label for="tag" style="font-size:13px;font-weight:500;color:var(--fg-secondary);margin-bottom:4px;display:block;">Tag <span style="color:var(--fg-tertiary);font-weight:400;">(optionnel)</span></label>
+        <select
+            id="tag"
+            name="tag"
+            class="fb-input {{ $errors->has('tag') ? 'is-invalid' : '' }}"
+        >
+            <option value="">— Aucun —</option>
+            <option value="Atelier" {{ old('tag', $event->tag ?? '') === 'Atelier' ? 'selected' : '' }}>Atelier</option>
+            <option value="Information" {{ old('tag', $event->tag ?? '') === 'Information' ? 'selected' : '' }}>Information</option>
+        </select>
+        @error('tag')
+            <div class="fb-error">{{ $message }}</div>
+        @enderror
+    </div>
+
+    <div class="fb-field">
+        <label for="foot_type" style="font-size:13px;font-weight:500;color:var(--fg-secondary);margin-bottom:4px;display:block;">Accès <span style="color:var(--fg-tertiary);font-weight:400;">(optionnel)</span></label>
+        <select
+            id="foot_type"
+            name="foot_type"
+            class="fb-input {{ $errors->has('foot_type') ? 'is-invalid' : '' }}"
+        >
+            <option value="">— Aucune mention —</option>
+            <option value="places_limitees" {{ old('foot_type', $event->foot_type ?? '') === 'places_limitees' ? 'selected' : '' }}>Places limitées</option>
+            <option value="entree_libre" {{ old('foot_type', $event->foot_type ?? '') === 'entree_libre' ? 'selected' : '' }}>Entrée libre</option>
+        </select>
+        @error('foot_type')
+            <div class="fb-error">{{ $message }}</div>
+        @enderror
+    </div>
+</div>
+
 <div class="fb-field" style="display:flex;align-items:center;gap:8px;margin-top:4px;">
     <input type="hidden" name="is_public" value="0">
     <input

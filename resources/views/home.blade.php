@@ -25,13 +25,47 @@
         </div>
     </div>
     <div class="fb-hero-side">
-        <div class="fb-hero-card">
-            <div class="fb-eyebrow">Prochain rendez-vous</div>
-            <h3 class="fb-card-title">Café des idées</h3>
-            <p class="fb-card-body">Vous avez une envie, un projet ? On en discute autour d'un café.</p>
-            <div class="fb-card-meta">À confirmer · Rejoignez la liste</div>
-            <a href="{{ route('inscription') }}" class="fb-btn fb-btn-primary fb-btn-block" style="white-space:nowrap;">Je viens →</a>
-        </div>
+        @if ($heroEvent)
+            @php
+                $heroColor = match($heroEvent->tag) {
+                    'Atelier'     => ['border' => 'var(--brique-500)', 'tag' => 'var(--brique-600)'],
+                    'Information' => ['border' => 'var(--ocre-400)',   'tag' => 'var(--ocre-600)'],
+                    default       => ['border' => 'var(--mousse-500)', 'tag' => 'var(--mousse-500)'],
+                };
+            @endphp
+            <article class="fb-hero-card fb-event-card" style="border-top-color:{{ $heroColor['border'] }};">
+                <div class="fb-event-tag" style="color:{{ $heroColor['tag'] }};text-transform:uppercase;">
+                    {{ $heroEvent->tag ?? $heroEvent->circle->name }}
+                </div>
+                <h3 class="fb-event-title">{{ $heroEvent->title }}</h3>
+                @if ($heroEvent->description)
+                    <p class="fb-event-body">{{ $heroEvent->description }}</p>
+                @endif
+                <div class="fb-event-meta">
+                    <span class="fb-mono">{{ $heroEvent->starts_at->isoFormat('D MMMM YYYY · HH:mm') }}</span>
+                    @if ($heroEvent->location)
+                        <span class="fb-event-place">{{ $heroEvent->location }}</span>
+                    @endif
+                </div>
+                @if ($heroEvent->foot_type)
+                    <div class="fb-event-foot">
+                        @if ($heroEvent->foot_type === 'places_limitees')
+                            <span class="fb-badge fb-badge-mousse">Places limitées</span>
+                        @else
+                            <span class="fb-badge fb-badge-ocre">Entrée libre</span>
+                        @endif
+                        <a href="{{ route('evenements.show', $heroEvent) }}" class="fb-btn fb-btn-ghost fb-btn-sm">Je m'inscris →</a>
+                    </div>
+                @else
+                    <a href="{{ route('evenements.show', $heroEvent) }}" class="fb-btn fb-btn-primary fb-btn-block" style="white-space:nowrap;margin-top:16px;">Je m'inscris →</a>
+                @endif
+            </article>
+        @else
+            <div class="fb-hero-card">
+                <div class="fb-eyebrow">Prochain rendez-vous</div>
+                <p style="color:var(--fg-tertiary);font-size:15px;">Aucun événement public à venir pour le moment.</p>
+            </div>
+        @endif
     </div>
 </section>
 
@@ -86,45 +120,42 @@
             <a href="{{ route('evenements') }}" class="fb-section-link">Voir tout l'agenda →</a>
         </div>
         <div class="fb-events-grid">
-            <article class="fb-event-card" style="border-top-color:var(--brique-500);">
-                <div class="fb-event-tag" style="color:var(--brique-600);">ATELIER · À confirmer</div>
-                <h3 class="fb-event-title">Réparer son vélo, entre voisins</h3>
-                <p class="fb-event-body">On apporte sa monture, on partage les outils. Pas besoin d'être bricoleur.</p>
-                <div class="fb-event-meta">
-                    <span class="fb-mono">Date à confirmer · 19:00</span>
-                    <span class="fb-event-place">Lieu à définir</span>
-                </div>
-                <div class="fb-event-foot">
-                    <span class="fb-badge fb-badge-mousse">Places limitées</span>
-                    <a href="{{ route('inscription') }}" class="fb-btn fb-btn-ghost fb-btn-sm">Je m'inscris →</a>
-                </div>
-            </article>
-            <article class="fb-event-card" style="border-top-color:var(--ocre-400);">
-                <div class="fb-event-tag" style="color:var(--ocre-600);">FABRIQUE · À confirmer</div>
-                <h3 class="fb-event-title">Café des idées</h3>
-                <p class="fb-event-body">Vous avez un projet, une envie ? On en discute autour d'un café.</p>
-                <div class="fb-event-meta">
-                    <span class="fb-mono">Date à confirmer · 09:30</span>
-                    <span class="fb-event-place">Lieu à définir</span>
-                </div>
-                <div class="fb-event-foot">
-                    <span class="fb-badge fb-badge-ocre">Ouvert à tous</span>
-                    <a href="{{ route('inscription') }}" class="fb-btn fb-btn-ghost fb-btn-sm">Je m'inscris →</a>
-                </div>
-            </article>
-            <article class="fb-event-card" style="border-top-color:var(--mousse-500);">
-                <div class="fb-event-tag" style="color:var(--mousse-500);">ÉCOLOGIE · À confirmer</div>
-                <h3 class="fb-event-title">Compost partagé, mode d'emploi</h3>
-                <p class="fb-event-body">Visite du nouveau composteur de quartier. Comment l'utiliser, qu'y mettre.</p>
-                <div class="fb-event-meta">
-                    <span class="fb-mono">Date à confirmer · 11:00</span>
-                    <span class="fb-event-place">Lieu à définir</span>
-                </div>
-                <div class="fb-event-foot">
-                    <span class="fb-badge fb-badge-mousse">Entrée libre</span>
-                    <a href="{{ route('inscription') }}" class="fb-btn fb-btn-ghost fb-btn-sm">Je m'inscris →</a>
-                </div>
-            </article>
+            @forelse ($upcomingEvents as $event)
+                @php
+                    $color = match($event->tag) {
+                        'Atelier'     => ['border' => 'var(--brique-500)', 'tag' => 'var(--brique-600)'],
+                        'Information' => ['border' => 'var(--ocre-400)',   'tag' => 'var(--ocre-600)'],
+                        default       => ['border' => 'var(--mousse-500)', 'tag' => 'var(--mousse-500)'],
+                    };
+                @endphp
+                <article class="fb-event-card" style="border-top-color:{{ $color['border'] }};">
+                    <div class="fb-event-tag" style="color:{{ $color['tag'] }};text-transform:uppercase;">
+                        {{ $event->tag ?? $event->circle->name }}
+                    </div>
+                    <h3 class="fb-event-title">{{ $event->title }}</h3>
+                    @if ($event->description)
+                        <p class="fb-event-body">{{ $event->description }}</p>
+                    @endif
+                    <div class="fb-event-meta">
+                        <span class="fb-mono">{{ $event->starts_at->isoFormat('D MMMM YYYY · HH:mm') }}</span>
+                        @if ($event->location)
+                            <span class="fb-event-place">{{ $event->location }}</span>
+                        @endif
+                    </div>
+                    <div class="fb-event-foot">
+                        @if ($event->foot_type === 'places_limitees')
+                            <span class="fb-badge fb-badge-mousse">Places limitées</span>
+                        @elseif ($event->foot_type === 'entree_libre')
+                            <span class="fb-badge fb-badge-ocre">Entrée libre</span>
+                        @else
+                            <span></span>
+                        @endif
+                        <a href="{{ route('evenements.show', $event) }}" class="fb-btn fb-btn-ghost fb-btn-sm">Je m'inscris →</a>
+                    </div>
+                </article>
+            @empty
+                <p style="color:var(--fg-tertiary);font-size:15px;">Aucun événement public à venir pour le moment.</p>
+            @endforelse
         </div>
     </div>
 </section>

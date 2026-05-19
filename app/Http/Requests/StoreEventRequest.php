@@ -21,6 +21,8 @@ class StoreEventRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'location' => ['nullable', 'string', 'max:200'],
             'is_public' => ['boolean'],
+            'tag' => ['nullable', 'string', 'in:Atelier,Information'],
+            'foot_type' => ['nullable', 'string', 'in:places_limitees,entree_libre'],
         ];
     }
 

@@ -557,7 +557,7 @@ html, body {
     background: var(--encre-600); color: var(--creme-100);
     padding: 24px 16px; display: flex; flex-direction: column; gap: 4px;
     position: sticky; top: 0; height: 100vh; overflow-y: auto;
-    position: relative; overflow: hidden;
+    overflow-x: hidden;
 }
 .ea-side::before {
     content: ''; position: absolute; inset: 0;
