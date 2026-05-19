@@ -106,7 +106,7 @@
 
         <p style="font-size:12px;color:var(--fg-tertiary);margin-top:20px;line-height:1.6;">
             En vous inscrivant, vous acceptez notre
-            <a href="{{ route('legal.privacy') }}" style="color:var(--brique-600);">politique de confidentialité</a>.
+            <a href="{{ route('pages.show', ['slug' => 'politique-de-confidentialite']) }}" style="color:var(--brique-600);">politique de confidentialité</a>.
             Vos données ne sont partagées avec personne.
         </p>
     </form>
