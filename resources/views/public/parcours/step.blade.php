@@ -45,6 +45,30 @@
                     @endif
                 </div>
             </form>
+
+            {{-- Lien de sortie : "Aucun de ces services ne correspond" (questions de niveau 2) --}}
+            @if ($question->show_fallback_link)
+                <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border-subtle);">
+                    <a href="{{ route('parcours.fallback') }}"
+                       style="font-size:13px;color:var(--fg-tertiary);text-decoration:none;"
+                       onmouseover="this.style.color='var(--fg-secondary)'"
+                       onmouseout="this.style.color='var(--fg-tertiary)'">
+                        Aucun de ces services ne correspond →
+                    </a>
+                </div>
+            @endif
+
+            {{-- Lien de sortie : "Je ne sais pas encore" (question racine uniquement) --}}
+            @if ($question->is_root)
+                <div style="margin-top:8px;">
+                    <a href="{{ route('parcours.fallback') }}"
+                       style="font-size:13px;color:var(--fg-tertiary);text-decoration:none;"
+                       onmouseover="this.style.color='var(--fg-secondary)'"
+                       onmouseout="this.style.color='var(--fg-tertiary)'">
+                        Je ne sais pas encore
+                    </a>
+                </div>
+            @endif
         </div>
 
     </div>

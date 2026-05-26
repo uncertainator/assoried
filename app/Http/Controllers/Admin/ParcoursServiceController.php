@@ -33,6 +33,7 @@ class ParcoursServiceController extends Controller
         $data = $request->validated();
         $data['is_active'] = $request->boolean('is_active', true);
         $data['created_by'] = $request->user()->id;
+        $data['use_cases'] = $this->parseUseCases($data['use_cases'] ?? null);
 
         ParcoursService::create($data);
 
@@ -51,11 +52,32 @@ class ParcoursServiceController extends Controller
     {
         $data = $request->validated();
         $data['is_active'] = $request->boolean('is_active');
+        $data['use_cases'] = $this->parseUseCases($data['use_cases'] ?? null);
 
         $service->update($data);
 
         return redirect()->route('admin.parcours.index')
             ->with('success', 'Service mis à jour.');
+    }
+
+    /**
+     * Converts a newline-separated textarea value into a filtered array.
+     * Already-array values (e.g. from tests) are passed through as-is.
+     */
+    private function parseUseCases(mixed $value): array
+    {
+        if (is_array($value)) {
+            return array_values(array_filter($value, fn ($v) => trim((string) $v) !== ''));
+        }
+
+        if (! is_string($value) || trim($value) === '') {
+            return [];
+        }
+
+        return array_values(array_filter(
+            array_map('trim', explode("\n", $value)),
+            fn ($line) => $line !== ''
+        ));
     }
 
     public function destroy(ParcoursService $service): RedirectResponse

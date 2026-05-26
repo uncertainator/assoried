@@ -16,6 +16,7 @@ use App\Http\Controllers\Auth\PasswordLoginController;
 use App\Http\Controllers\Auth\PasswordSetupController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ActivitiesController;
 use App\Http\Controllers\ConsultationPublicController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LabExternalRequestController;
@@ -52,6 +53,7 @@ use Illuminate\Support\Facades\Route;
    Public routes
    ============================================================ */
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/activites', [ActivitiesController::class, 'index'])->name('activities');
 Route::get('/agenda-public', [PublicAgendaController::class, 'index'])->name('public.agenda');
 Route::get('/evenements', fn () => view('coming-soon', ['title' => 'Événements', 'soon' => 'L\'agenda des événements']))->name('evenements');
 Route::get('/evenements/{event}', [PublicEventController::class, 'show'])->name('evenements.show');
@@ -86,6 +88,8 @@ Route::prefix('chemin-services')->name('parcours.')->group(function () {
     Route::get('/retour', [ParcoursController::class, 'back'])->name('back');
     Route::get('/resultat/{service}', [ParcoursController::class, 'result'])->name('result');
     Route::get('/contact', [ParcoursController::class, 'fallback'])->name('fallback');
+    Route::get('/contact-service', [ParcoursController::class, 'showContactService'])->name('contact-service');
+    Route::post('/contact-service', [ParcoursController::class, 'sendContactService'])->name('contact-service.send');
 });
 
 /* ============================================================
@@ -363,6 +367,11 @@ Route::prefix('consultations')->name('consultations.')->group(function () {
     Route::get('/{consultation}/resultats', [ConsultationPublicController::class, 'resultats'])->name('resultats');
     Route::get('/{consultation}/terrain', [ConsultationPublicController::class, 'terrainPrint'])->name('terrain.print');
 });
+
+/* ============================================================
+   Espace La Fabrique — page vitrine publique
+   ============================================================ */
+Route::get('/la-fabrique', fn () => view('la-fabrique.index'))->name('la-fabrique');
 
 /* ============================================================
    Pages statiques (catch-all — doit rester en dernier)

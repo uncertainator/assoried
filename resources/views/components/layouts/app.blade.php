@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'La Fabrique' }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 <body>
 
@@ -17,19 +18,7 @@
     <nav class="fb-nav-links">
         <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Accueil</a>
         <a href="{{ route('evenements') }}" class="{{ request()->routeIs('evenements') ? 'active' : '' }}">Événements</a>
-        <a href="{{ route('parcours.start') }}" class="{{ request()->routeIs('parcours.*') ? 'active' : '' }}">Nos services</a>
-        <div class="fb-nav-dropdown {{ request()->routeIs('lab.external.*') ? 'active' : '' }}">
-            <span class="fb-nav-dropdown-trigger">
-                Lab
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-            </span>
-            <div class="fb-nav-dropdown-menu">
-                <div class="fb-nav-dropdown-inner">
-                    <a href="{{ route('lab.external.citoyen') }}" class="{{ request()->routeIs('lab.external.citoyen*') ? 'active' : '' }}">Particuliers</a>
-                    <a href="{{ route('lab.external.entreprise') }}" class="{{ request()->routeIs('lab.external.entreprise*') ? 'active' : '' }}">Entreprises</a>
-                </div>
-            </div>
-        </div>
+        <a href="{{ route('la-fabrique') }}" class="{{ request()->routeIs('la-fabrique') ? 'active' : '' }}">Espace La Fabrique</a>
         @auth
             <a href="{{ route('member.dashboard') }}" class="{{ request()->routeIs('member.*') ? 'active' : '' }}">Mon espace</a>
         @else
@@ -73,7 +62,7 @@
             <div>
                 <div class="fb-footer-head">Activités</div>
                 <a href="{{ route('evenements') }}">Événements</a>
-                <a href="{{ route('inscription') }}">Cercles thématiques</a>
+                <a href="{{ route('activities') }}">Cercles thématiques</a>
                 <a href="{{ route('parcours.start') }}">Trouver mon service</a>
             </div>
             <div>

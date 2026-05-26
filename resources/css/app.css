@@ -159,6 +159,8 @@
    ============================================================ */
 *, *::before, *::after { box-sizing: border-box; }
 
+html { scroll-behavior: smooth; }
+
 html, body {
     background: var(--bg-page);
     color: var(--fg-primary);
@@ -550,14 +552,14 @@ html, body {
 /* ============================================================
    Espace adhérent — Dashboard
    ============================================================ */
-.ea-app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
-@media (max-width: 900px) { .ea-app { grid-template-columns: 1fr; } }
+.ea-app { min-height: 100vh; }
 
 .ea-side {
     background: var(--encre-600); color: var(--creme-100);
     padding: 24px 16px; display: flex; flex-direction: column; gap: 4px;
-    position: sticky; top: 0; height: 100vh; overflow-y: auto;
-    overflow-x: hidden;
+    position: fixed; top: 0; left: 0; width: 240px; height: 100vh;
+    overflow-y: auto; overflow-x: hidden;
+    z-index: 50;
 }
 .ea-side::before {
     content: ''; position: absolute; inset: 0;
@@ -595,7 +597,8 @@ html, body {
 .ea-side-name-2 { font-size: 13px; color: var(--creme-50); }
 .ea-side-role-2 { font-size: 11px; color: var(--encre-100); }
 
-.ea-main { padding: 32px 40px; overflow-y: auto; }
+.ea-main { margin-left: 240px; padding: 32px 40px; min-height: 100vh; }
+@media (max-width: 900px) { .ea-side { position: relative; width: 100%; height: auto; } .ea-main { margin-left: 0; } }
 @media (max-width: 768px) { .ea-main { padding: 24px 16px; } }
 
 .ea-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; }
@@ -643,10 +646,12 @@ html, body {
 /* ============================================================
    Circles (member space)
    ============================================================ */
-.circles-layout { display: grid; grid-template-columns: 1fr 360px; min-height: calc(100vh - 0px); }
-@media (max-width: 1100px) { .circles-layout { grid-template-columns: 1fr; } }
+.circles-layout { display: block; }
+.circle-panel-track { /* spacer vide — le panel fixed est sorti du flux */ }
 
-.circles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; padding: 32px 40px; align-content: start; }
+.circles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; padding: 32px 40px; align-content: start; transition: padding-right 200ms ease; }
+.circles-grid.panel-open { padding-right: calc(360px + 40px); }
+@media (max-width: 1100px) { .circles-grid.panel-open { padding-right: 40px; } }
 @media (max-width: 768px) { .circles-grid { padding: 24px 16px; } }
 
 .circle-card {
@@ -672,13 +677,19 @@ html, body {
 .circle-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border-subtle); }
 .circle-members { font: 500 12px var(--font-sans); color: var(--fg-tertiary); display: flex; align-items: center; gap: 4px; }
 
-/* Circle detail panel */
+/* Circle detail panel — fixé au bord droit du viewport, pleine hauteur */
 .circle-panel {
-    background: var(--bg-surface-2); border-left: 1px solid var(--border-subtle);
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: 360px;
+    background: var(--bg-surface-2);
+    border-left: 1px solid var(--border-subtle);
     padding: 32px; overflow-y: auto;
-    position: sticky; top: 0; max-height: 100vh;
+    z-index: 40;
+    box-shadow: -4px 0 24px rgba(74,28,16,.07);
 }
-@media (max-width: 1100px) { .circle-panel { border-left: none; border-top: 1px solid var(--border-subtle); } }
+@media (max-width: 1100px) {
+    .circle-panel { position: relative; top: auto; right: auto; bottom: auto; width: 100%; border-left: none; border-top: 1px solid var(--border-subtle); box-shadow: none; }
+}
 
 .circle-panel-header  { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
 .circle-panel-title   { font: 600 28px var(--font-display); color: var(--fg-primary); margin: 0 0 8px; text-wrap: balance; }
@@ -752,3 +763,16 @@ html, body {
 .ea-panel--compact .ea-event-row   { padding: 6px 0; gap: 10px; }
 .ea-panel--compact .ea-event-name  { font-size: 13px; }
 .ea-panel--compact .ea-event-meta-2 { font-size: 11px; }
+
+/* ============================================================
+   Espace La Fabrique — grilles responsive
+   ============================================================ */
+.lf-section-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start;
+}
+@media (max-width: 768px) { .lf-section-grid { grid-template-columns: 1fr; gap: 32px; } }
+
+.lf-images-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+@media (max-width: 480px) { .lf-images-grid { grid-template-columns: 1fr; } }

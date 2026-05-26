@@ -16,14 +16,21 @@ class UpdateParcoursServiceRequest extends FormRequest
 
     public function rules(): array
     {
+        $serviceId = $this->route('service')?->id;
+
         return [
-            'name' => ['required', 'string', 'max:150'],
-            'description' => ['required', 'string'],
-            'use_cases' => ['required', 'string'],
-            'cta_type' => ['required', Rule::enum(ParcoursCtaType::class)],
-            'cta_value' => ['required', 'string', 'max:512'],
-            'is_active' => ['boolean'],
-            'sort_order' => ['integer', 'min:0'],
+            'slug'             => ['nullable', 'string', 'max:100', Rule::unique('parcours_services', 'slug')->ignore($serviceId)],
+            'name'             => ['required', 'string', 'max:150'],
+            'description'      => ['required', 'string'],
+            'use_cases'        => ['nullable', 'string'],
+            'pour_qui'         => ['nullable', 'string'],
+            'ce_que_ca_produit'=> ['nullable', 'string'],
+            'format'           => ['nullable', 'string', 'max:200'],
+            'branche'          => ['nullable', 'string', 'max:80'],
+            'cta_type'         => ['required', Rule::enum(ParcoursCtaType::class)],
+            'cta_value'        => ['required', 'string', 'max:512'],
+            'is_active'        => ['boolean'],
+            'sort_order'       => ['integer', 'min:0'],
         ];
     }
 

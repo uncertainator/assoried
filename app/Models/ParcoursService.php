@@ -13,9 +13,14 @@ class ParcoursService extends Model
     use HasFactory;
 
     protected $fillable = [
+        'slug',
         'name',
         'description',
         'use_cases',
+        'pour_qui',
+        'ce_que_ca_produit',
+        'format',
+        'branche',
         'cta_type',
         'cta_value',
         'is_active',
@@ -26,6 +31,7 @@ class ParcoursService extends Model
     protected $casts = [
         'cta_type' => ParcoursCtaType::class,
         'is_active' => 'boolean',
+        'use_cases' => 'array',
     ];
 
     public function options(): HasMany

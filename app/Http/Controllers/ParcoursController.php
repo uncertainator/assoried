@@ -8,6 +8,7 @@ use App\Models\ParcoursQuestion;
 use App\Models\ParcoursService;
 use App\Services\ParcoursNavigator;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ParcoursController extends Controller
@@ -83,5 +84,36 @@ class ParcoursController extends Controller
         $hasHistory = count(session('parcours.history', [])) > 0;
 
         return view('public.parcours.fallback', compact('hasHistory'));
+    }
+
+    public function showContactService(Request $request): View
+    {
+        $slug    = $request->query('service', '');
+        $service = $slug ? ParcoursService::where('slug', $slug)->first() : null;
+
+        return view('public.parcours.contact-service', [
+            'serviceSlug' => $slug,
+            'serviceName' => $service?->name,
+            'hasHistory'  => count(session('parcours.history', [])) > 0,
+        ]);
+    }
+
+    public function sendContactService(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name'         => ['required', 'string', 'max:100'],
+            'email'        => ['required', 'email', 'max:150'],
+            'message'      => ['required', 'string', 'max:2000'],
+            'service_slug' => ['nullable', 'string', 'max:100'],
+        ]);
+
+        // TODO: envoyer un email via Mailable (Mail::to('contact@lafabrique-benfeld.fr')->send(...))
+        // En attendant, la soumission est reçue et confirmée à l'utilisateur.
+        \Illuminate\Support\Facades\Log::info('Parcours contact', $validated);
+
+        session()->forget('parcours.history');
+
+        return redirect()->route('parcours.start')
+            ->with('success', 'Votre message a été envoyé. Nous vous répondrons rapidement.');
     }
 }

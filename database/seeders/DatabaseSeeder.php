@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(CircleSeeder::class);
         $this->call(PageSeeder::class);
+        $this->call(ParcoursSeeder::class);
 
         User::factory()->create([
             'name' => 'Admin',

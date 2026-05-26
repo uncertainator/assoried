@@ -32,7 +32,7 @@
             </div>
             <div style="display:flex;flex-direction:column;gap:8px;">
                 <label style="display:flex;align-items:flex-start;gap:10px;padding:14px;border:1px solid var(--border-subtle);border-radius:var(--radius-md);cursor:pointer;background:var(--bg-surface-2);transition:border-color .12s;"
-                       :style="authMethod === 'magic_link' ? 'border-color:var(--brique-400);' : ''">
+                       :style="{ 'border-color': authMethod === 'magic_link' ? 'var(--brique-400)' : '' }">
                     <input type="radio" name="auth_method" value="magic_link"
                            x-model="authMethod"
                            style="margin-top:3px;accent-color:var(--brique-500);flex-shrink:0;">
@@ -42,7 +42,7 @@
                     </div>
                 </label>
                 <label style="display:flex;align-items:flex-start;gap:10px;padding:14px;border:1px solid var(--border-subtle);border-radius:var(--radius-md);cursor:pointer;background:var(--bg-surface-2);transition:border-color .12s;"
-                       :style="authMethod === 'password' ? 'border-color:var(--brique-400);' : ''">
+                       :style="{ 'border-color': authMethod === 'password' ? 'var(--brique-400)' : '' }">
                     <input type="radio" name="auth_method" value="password"
                            x-model="authMethod"
                            style="margin-top:3px;accent-color:var(--brique-500);flex-shrink:0;">

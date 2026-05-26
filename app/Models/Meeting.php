@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Database\Factories\MeetingFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -22,10 +23,12 @@ class Meeting extends Model
         'duration_minutes',
         'location',
         'visio_url',
+        'is_public',
     ];
 
     protected $casts = [
         'scheduled_at' => 'datetime',
+        'is_public' => 'boolean',
     ];
 
     public function circle(): BelongsTo
@@ -56,5 +59,10 @@ class Meeting extends Model
     public function isPast(): bool
     {
         return $this->scheduled_at->isPast();
+    }
+
+    public function scopePublic(Builder $query): Builder
+    {
+        return $query->where('is_public', true);
     }
 }

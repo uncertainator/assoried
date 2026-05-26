@@ -18,7 +18,7 @@
             <div class="flash-error">{{ session('error') }}</div>
         @endif
 
-        <div class="circles-grid">
+        <div class="circles-grid" :class="{ 'panel-open': selected !== null }">
             @foreach ($circles as $circle)
                 @php
                     $membership = $myMemberships->get($circle->id);
@@ -84,7 +84,8 @@
         </div>
     </div>
 
-    {{-- Detail panel (Alpine.js) --}}
+    {{-- Colonne droite : wrapper pleine hauteur + panneau sticky --}}
+    <div class="circle-panel-track">
     <div class="circle-panel" x-show="selected !== null" x-cloak
          x-transition:enter="transition ease-out duration-200"
          x-transition:enter-start="opacity-0 translate-x-4"
@@ -161,6 +162,7 @@
             </div>
         @endforeach
     </div>
+    </div>{{-- /circle-panel-track --}}
 
 </div>
 

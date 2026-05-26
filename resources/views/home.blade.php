@@ -13,7 +13,7 @@
             On améliore le cadre de vie ensemble — par des activités, des projets, et l'envie de bien vivre dans notre ville.
         </p>
         <div style="display:flex;gap:12px;margin-top:28px;flex-wrap:wrap;">
-            <a href="{{ route('inscription') }}" class="fb-btn fb-btn-primary fb-btn-lg">Découvrir nos activités</a>
+            <a href="{{ route('activities') }}" class="fb-btn fb-btn-primary fb-btn-lg">Découvrir nos activités</a>
             <a href="{{ route('inscription') }}" class="fb-btn fb-btn-outline fb-btn-lg">Devenir adhérent</a>
         </div>
         <div class="fb-hero-meta">

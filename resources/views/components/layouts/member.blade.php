@@ -34,6 +34,7 @@
             </svg>
             Mes cercles
         </a>
+        <div class="ea-nav-section">Créer</div>
         <a href="{{ route('member.feed') }}" class="ea-nav-item {{ request()->routeIs('member.feed') ? 'active' : '' }}">
             <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M4 22V4h16v18"/><path d="M8 10h8M8 14h8M8 18h5"/>

@@ -14,11 +14,13 @@ class ParcoursQuestion extends Model
     protected $fillable = [
         'label',
         'is_root',
+        'show_fallback_link',
         'sort_order',
     ];
 
     protected $casts = [
         'is_root' => 'boolean',
+        'show_fallback_link' => 'boolean',
     ];
 
     public function options(): HasMany
