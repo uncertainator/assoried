@@ -37,7 +37,7 @@ class LabExternalRequestController extends Controller
 
         $this->notifyRecipients($externalRequest);
 
-        return redirect()->route('lab.public')
+        return redirect()->back()
             ->with('submitted', 'citoyen');
     }
 
@@ -55,7 +55,7 @@ class LabExternalRequestController extends Controller
 
         $this->notifyRecipients($externalRequest);
 
-        return redirect()->route('lab.public')
+        return redirect()->back()
             ->with('submitted', 'entreprise');
     }
 

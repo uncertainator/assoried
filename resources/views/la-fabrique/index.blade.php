@@ -45,8 +45,9 @@
         </div>
     </div>
 
-    {{-- Ancre vide — formulaire citoyen (implémenté en US-prompt 2) --}}
-    <div id="form-citoyen" style="margin-top:48px;"></div>
+    <div id="form-citoyen" style="margin-top:48px;">
+        @include('lab.external._form-citoyen')
+    </div>
 </section>
 
 {{-- ══════════════════════════ SECTION 3 — ENTREPRISES ══ --}}
@@ -73,8 +74,9 @@
             </div>
         </div>
 
-        {{-- Ancre vide — formulaire entreprise (implémenté en US-prompt 2) --}}
-        <div id="form-entreprise" style="margin-top:48px;"></div>
+        <div id="form-entreprise" style="margin-top:48px;">
+            @include('lab.external._form-entreprise')
+        </div>
     </section>
 </div>
 

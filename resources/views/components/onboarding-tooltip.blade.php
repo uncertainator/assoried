@@ -6,17 +6,18 @@
     x-show="active"
     x-cloak
 >
-    {{-- Overlay --}}
+    {{-- Overlay : clic dessus = fermer --}}
     <div
         style="position:fixed;inset:0;background:rgba(0,0,0,0.25);z-index:1000;"
-        @click.stop
+        @click="finish()"
     ></div>
 
     {{-- Tooltip --}}
     <div
         x-ref="tooltip"
         style="position:fixed;z-index:1001;width:280px;background:#fff;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.18);padding:20px 20px 16px;"
-        :style="tooltipStyle"
+        :style="{ top: tooltipTop + 'px', left: tooltipLeft + 'px', visibility: positioned ? 'visible' : 'hidden' }"
+        @click.stop
     >
         {{-- Arrow --}}
         <div style="position:absolute;left:-8px;top:20px;width:0;height:0;border-top:8px solid transparent;border-bottom:8px solid transparent;border-right:8px solid #fff;"></div>
@@ -60,7 +61,9 @@ function onboardingFlow(alreadyCompleted) {
         active: false,
         step: 0,
         completed: alreadyCompleted,
-        tooltipStyle: '',
+        tooltipTop: 0,
+        tooltipLeft: 0,
+        positioned: false,
         steps: [
             { target: 'nav-cercles',  title: 'Vos cercles',  body: 'Rejoignez et gérez vos cercles thématiques depuis ce menu.' },
             { target: 'nav-sondages', title: 'Sondages',      body: 'Consultez et répondez aux sondages de vos cercles.' },
@@ -82,7 +85,9 @@ function onboardingFlow(alreadyCompleted) {
                 const target = document.getElementById(this.steps[this.step].target);
                 if (!target) return;
                 const rect = target.getBoundingClientRect();
-                this.tooltipStyle = `top:${Math.max(8, rect.top - 4)}px;left:${rect.right + 16}px;`;
+                this.tooltipTop = Math.max(8, rect.top - 4);
+                this.tooltipLeft = rect.right + 16;
+                this.positioned = true;
             });
         },
         async finish() {
