@@ -50,6 +50,21 @@
             Consultations
         </a>
 
+        @php $maintenanceActive = (bool) \App\Models\Setting::get('maintenance_mode', false); @endphp
+        <div class="admin-nav-head">Système</div>
+        <form method="POST" action="{{ route('admin.maintenance.toggle') }}" style="margin:0;">
+            @csrf
+            <button type="submit" class="admin-nav-link" style="width:100%;background:none;border:none;text-align:left;cursor:pointer;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                Maintenance
+                @if($maintenanceActive)
+                    <span style="font-size:10px;background:#dc2626;color:#fff;padding:1px 6px;border-radius:9px;margin-left:4px;font-weight:600;">ON</span>
+                @else
+                    <span style="font-size:10px;background:#6b7280;color:#fff;padding:1px 6px;border-radius:9px;margin-left:4px;font-weight:600;">OFF</span>
+                @endif
+            </button>
+        </form>
+
         <div class="admin-nav-head" style="margin-top:auto;">Compte</div>
         <a href="{{ route('member.dashboard') }}" class="admin-nav-link">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg>

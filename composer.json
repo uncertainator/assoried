@@ -82,5 +82,10 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [{
+        "name": "caveman",
+        "type": "path",
+        "url": "C:\\Users\\jvera\\Documents\\caveman-pkg"
+    }]
 }

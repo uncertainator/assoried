@@ -28,7 +28,7 @@
             </svg>
             Accueil
         </a>
-        <a href="{{ route('member.circles.index') }}" class="ea-nav-item {{ request()->routeIs('member.circles.*') ? 'active' : '' }}">
+        <a id="nav-cercles" href="{{ route('member.circles.index') }}" class="ea-nav-item {{ request()->routeIs('member.circles.*') ? 'active' : '' }}">
             <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/>
             </svg>
@@ -47,13 +47,13 @@
             </svg>
             Agenda
         </a>
-        <a href="{{ route('member.polls.index') }}" class="ea-nav-item {{ request()->routeIs('member.polls.*') ? 'active' : '' }}">
+        <a id="nav-sondages" href="{{ route('member.polls.index') }}" class="ea-nav-item {{ request()->routeIs('member.polls.*') ? 'active' : '' }}">
             <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M3 6h18M3 12h12M3 18h8"/><circle cx="19" cy="18" r="3"/><path d="m21 20-1.5-1.5"/>
             </svg>
             Sondages
         </a>
-        <a href="{{ route('member.scrutins.index') }}" class="ea-nav-item {{ request()->routeIs('member.scrutins.*') ? 'active' : '' }}">
+        <a id="nav-scrutins" href="{{ route('member.scrutins.index') }}" class="ea-nav-item {{ request()->routeIs('member.scrutins.*') ? 'active' : '' }}">
             <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M9 12l2 2 4-4"/><rect x="3" y="3" width="18" height="18" rx="2"/>
             </svg>
@@ -94,6 +94,16 @@
         @endauth
 
         <div class="ea-nav-section">Compte</div>
+        <button
+            onclick="window.dispatchEvent(new CustomEvent('start-onboarding'))"
+            class="ea-nav-item"
+            style="width:100%;background:none;border:none;text-align:left;cursor:pointer;"
+        >
+            <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+            </svg>
+            Visite guidée
+        </button>
         <a href="{{ route('member.profile') }}" class="ea-nav-item {{ request()->routeIs('member.profile') ? 'active' : '' }}">
             <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="8" r="4"/><path d="M4 21c1-5 5-7 8-7s7 2 8 7"/>
@@ -130,6 +140,10 @@
         {{ $slot }}
     </main>
 </div>
+
+@auth
+<x-onboarding-tooltip :onboarding-completed="Auth::user()->onboarding_completed" />
+@endauth
 
 <script src="https://unpkg.com/lucide@latest" defer></script>
 <script>document.addEventListener('DOMContentLoaded', () => { if(window.lucide) lucide.createIcons(); });</script>

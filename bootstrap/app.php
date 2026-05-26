@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CheckMaintenanceMode;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsReferent;
 use Illuminate\Foundation\Application;
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => IsAdmin::class,
             'referent' => IsReferent::class,
         ]);
+        $middleware->web(append: [CheckMaintenanceMode::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

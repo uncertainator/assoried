@@ -18,6 +18,11 @@ use Illuminate\View\View;
 
 class LabExternalRequestController extends Controller
 {
+    public function showLab(): View
+    {
+        return view('lab.external.lab');
+    }
+
     public function showCitoyen(): View
     {
         return view('lab.external.citoyen');
@@ -32,8 +37,8 @@ class LabExternalRequestController extends Controller
 
         $this->notifyRecipients($externalRequest);
 
-        return redirect()->route('lab.external.confirmation')
-            ->with('success', 'Votre demande a bien été transmise au Lab.');
+        return redirect()->route('lab.public')
+            ->with('submitted', 'citoyen');
     }
 
     public function showEntreprise(): View
@@ -50,8 +55,8 @@ class LabExternalRequestController extends Controller
 
         $this->notifyRecipients($externalRequest);
 
-        return redirect()->route('lab.external.confirmation')
-            ->with('success', 'Votre demande a bien été transmise au Lab.');
+        return redirect()->route('lab.public')
+            ->with('submitted', 'entreprise');
     }
 
     public function index(Request $request): View

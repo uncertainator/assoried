@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\ConsultationAdminController;
 use App\Http\Controllers\Admin\CircleController as AdminCircleController;
 use App\Http\Controllers\Admin\CircleRequestController as AdminCircleRequestController;
 use App\Http\Controllers\Admin\LabToolController as AdminLabToolController;
+use App\Http\Controllers\Admin\MaintenanceController;
 use App\Http\Controllers\Admin\MemberController as AdminMemberController;
 use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Admin\ParcoursQuestionController as AdminParcoursQuestionController;
@@ -66,6 +67,8 @@ Route::post('/inscription', [RegistrationController::class, 'store'])->name('ins
 /* ============================================================
    Lab — demandes publiques externes (sans authentification)
    ============================================================ */
+Route::get('/lab', [LabExternalRequestController::class, 'showLab'])->name('lab.public');
+
 Route::get('/lab/citoyen', [LabExternalRequestController::class, 'showCitoyen'])->name('lab.external.citoyen');
 Route::post('/lab/citoyen', [LabExternalRequestController::class, 'storeCitoyen'])
     ->middleware('throttle:10,1')
@@ -126,6 +129,10 @@ Route::middleware('auth')->prefix('mon-espace')->name('member.')->group(function
     Route::get('/mon-profil', fn () => view('member.profile'))->name('profile');
     Route::post('/mot-de-passe', [PasswordController::class, 'update'])->name('password.update');
     Route::delete('/mon-compte', [AccountController::class, 'destroy'])->name('account.destroy');
+    Route::post('/onboarding/complete', function () {
+        Auth::user()->update(['onboarding_completed' => true]);
+        return response()->json(['ok' => true]);
+    })->name('onboarding.complete');
 
     // Agenda
     Route::get('/agenda', [EventController::class, 'index'])->name('agenda.index');
@@ -343,6 +350,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/consultations/{consultation}/cloturer', [ConsultationAdminController::class, 'cloturer'])->name('consultations.cloturer');
     Route::get('/consultations/{consultation}/terrain', [ConsultationAdminController::class, 'saisirTerrain'])->name('consultations.terrain');
     Route::post('/consultations/{consultation}/terrain', [ConsultationAdminController::class, 'storeTerrain'])->name('consultations.terrain.store');
+
+    // Mode maintenance
+    Route::post('/maintenance/toggle', [MaintenanceController::class, 'toggle'])->name('maintenance.toggle');
 
     // Scrutins formels
     Route::get('/scrutins', [AdminScrutinController::class, 'index'])->name('scrutins.index');
