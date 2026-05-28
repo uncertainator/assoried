@@ -8,7 +8,7 @@
 </head>
 <body style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg-page);">
 <div style="max-width:420px;width:100%;padding:24px;text-align:center;">
-    <img src="/images/logo-mark.svg" alt="La Fabrique" width="64" height="64" style="margin-bottom:24px;">
+    <img src="{{ asset('images/logo-mark.svg') }}" alt="La Fabrique" width="64" height="64" style="margin-bottom:24px;">
     <div class="fb-eyebrow" style="text-align:center;">Espace adhérent</div>
     <h1 style="font-family:var(--font-display);font-size:2rem;font-weight:600;color:var(--fg-primary);margin:8px 0 16px;letter-spacing:-.02em;">
         Vérifiez votre boîte mail

@@ -1,7 +1,7 @@
 <x-layouts.app :title="($title ?? 'La Fabrique') . ' — La Fabrique'">
 
 <section style="max-width:640px;margin:96px auto;padding:0 24px;text-align:center;">
-    <img src="/images/logo-mark.svg" alt="" width="64" height="64" style="margin-bottom:24px;opacity:.4;">
+    <img src="{{ asset('images/logo-mark.svg') }}" alt="" width="64" height="64" style="margin-bottom:24px;opacity:.4;">
     <div class="fb-eyebrow" style="text-align:center;">À venir</div>
     <h1 style="font-family:var(--font-display);font-size:2.5rem;font-weight:600;color:var(--fg-primary);margin:8px 0 16px;letter-spacing:-.02em;text-wrap:balance;">
         {{ $soon ?? $title ?? 'Cette section' }} arrive bientôt.

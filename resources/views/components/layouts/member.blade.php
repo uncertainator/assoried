@@ -15,7 +15,7 @@
     <aside class="ea-side">
         <div class="ea-side-brand">
             <a href="{{ route('home') }}" class="fb-logo">
-                <img src="/images/logo-mark.svg" width="28" height="28" alt="">
+                <img src="{{ asset('images/logo-mark.svg') }}" width="28" height="28" alt="">
            
             <span class="ea-side-brand-text">La <em>Fabrique</em></span>
             </a>

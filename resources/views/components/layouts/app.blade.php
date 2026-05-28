@@ -12,7 +12,7 @@
 
 <header class="fb-header">
     <a href="{{ route('home') }}" class="fb-logo">
-        <img src="/images/logo-mark.svg" alt="" width="40" height="40">
+        <img src="{{ asset('images/logo-mark.svg') }}" alt="" width="40" height="40">
         <span class="fb-logo-text">Hop'Initiatives</span>
     </a>
     <nav class="fb-nav-links">
