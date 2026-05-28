@@ -1,5 +1,5 @@
 <?php
-
+# This seeder populates the database with a comprehensive set of test data covering all main entities and edge cases.
 namespace Database\Seeders;
 
 use App\Enums\CircleActionStatus;
