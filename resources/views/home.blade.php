@@ -76,7 +76,7 @@
     <div class="fb-piliers-grid">
         <article class="fb-pilier">
             <div class="fb-pilier-icon">
-                <img src="/images/pilier-bien-vivre.svg" alt="" width="48" height="48">
+                <img src="{{ asset('images/pilier-bien-vivre.svg') }}" alt="" width="48" height="48">
             </div>
             <h3 class="fb-pilier-name">Bien vivre</h3>
             <p class="fb-pilier-desc">Des projets pour mieux vivre entre générations et cultures.</p>
@@ -84,7 +84,7 @@
         </article>
         <article class="fb-pilier">
             <div class="fb-pilier-icon">
-                <img src="/images/pilier-ecologie.svg" alt="" width="48" height="48">
+                <img src="{{ asset('images/pilier-ecologie.svg') }}" alt="" width="48" height="48">
             </div>
             <h3 class="fb-pilier-name">Citoyenneté</h3>
             <p class="fb-pilier-desc">Des initiatives pour renforcer le tissu social et la participation citoyenne.</p>
@@ -92,7 +92,7 @@
         </article>
         <article class="fb-pilier">
             <div class="fb-pilier-icon">
-                <img src="/images/pilier-fabrique.svg" alt="" width="48" height="48">
+                <img src="{{ asset('images/pilier-fabrique.svg') }}" alt="" width="48" height="48">
             </div>
             <h3 class="fb-pilier-name">Partage de la connaissance</h3>
             <p class="fb-pilier-desc">Vous avez une idée, un projet ? On vous aide à la mettre en route.</p>
@@ -100,7 +100,7 @@
         </article>
         <article class="fb-pilier">
             <div class="fb-pilier-icon">
-                <img src="/images/pilier-cooperative.svg" alt="" width="48" height="48">
+                <img src="{{ asset('images/pilier-cooperative.svg') }}" alt="" width="48" height="48">
             </div>
             <h3 class="fb-pilier-name">Développement local</h3>
             <p class="fb-pilier-desc">Des structures pour soutenir l'entrepreneuriat local.</p>
