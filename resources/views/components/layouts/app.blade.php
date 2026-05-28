@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $title ?? 'La Fabrique' }}</title>
+    <title>{{ $title ?? 'Hop\'Initiatives' }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
@@ -13,7 +13,7 @@
 <header class="fb-header">
     <a href="{{ route('home') }}" class="fb-logo">
         <img src="/images/logo-mark.svg" alt="" width="40" height="40">
-        <span class="fb-logo-text">La Fabrique</span>
+        <span class="fb-logo-text">Hop'Initiatives</span>
     </a>
     <nav class="fb-nav-links">
         <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Accueil</a>
@@ -49,8 +49,8 @@
     <div class="fb-footer-pattern" aria-hidden="true"></div>
     <div class="fb-footer-inner">
         <div>
-            <div class="fb-footer-logo">La Fabrique</div>
-            <p class="fb-footer-baseline">Association citoyenne · Alsace</p>
+            <div class="fb-footer-logo">Hop'Initiatives</div>
+            <p class="fb-footer-baseline">Association citoyenne de Liens & de Projets</p>
         </div>
         <div class="fb-footer-cols">
             <div>

@@ -43,7 +43,36 @@ class MaintenanceModeTest extends TestCase
         $response = $this->get(route('home'));
 
         $response->assertSee('maintenance');
-        $response->assertSee(route('login'));
+        $response->assertSee('/maintenance/bypass');
+    }
+
+    public function test_bypass_with_correct_password_grants_access(): void
+    {
+        $this->enableMaintenance();
+
+        $this->post(route('maintenance.bypass'), ['password' => 'Hopinitiatives']);
+
+        $response = $this->get(route('home'));
+        $response->assertStatus(200);
+    }
+
+    public function test_bypass_with_wrong_password_stays_blocked(): void
+    {
+        $this->enableMaintenance();
+
+        $this->post(route('maintenance.bypass'), ['password' => 'wrongpassword']);
+
+        $response = $this->get(route('home'));
+        $response->assertStatus(503);
+    }
+
+    public function test_bypass_with_wrong_password_shows_error(): void
+    {
+        $this->enableMaintenance();
+
+        $response = $this->post(route('maintenance.bypass'), ['password' => 'wrongpassword']);
+
+        $response->assertSessionHas('maintenance_error');
     }
 
     public function test_visitor_passes_when_maintenance_off(): void

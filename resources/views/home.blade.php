@@ -4,13 +4,12 @@
 <section class="fb-hero">
     <div class="fb-hero-pattern" aria-hidden="true"></div>
     <div class="fb-hero-content">
-        <div class="fb-eyebrow">Association citoyenne · Alsace</div>
+        <div class="fb-eyebrow">Territoires Alsace Centrale</div>
         <h1 class="fb-h1">
-            Une fabrique <em class="fb-italic-accent">à idées,</em><br>
-            entre voisins.
+            Association Citoyenne de <em class="fb-italic-accent">Liens</em> & de <em class="fb-italic-accent">Projets</em>.
         </h1>
         <p class="fb-lead" style="max-width:52ch;">
-            On améliore le cadre de vie ensemble — par des activités, des projets, et l'envie de bien vivre dans notre ville.
+            On améliore le cadre de vie ensemble par des activités, des projets, et l'envie de bien vivre dans notre territoire.
         </p>
         <div style="display:flex;gap:12px;margin-top:28px;flex-wrap:wrap;">
             <a href="{{ route('activities') }}" class="fb-btn fb-btn-primary fb-btn-lg">Découvrir nos activités</a>
@@ -21,7 +20,6 @@
             <span class="fb-meta-dot">·</span>
             <span><strong>{{ $circles->count() }}</strong> cercles</span>
             <span class="fb-meta-dot">·</span>
-            <span><strong>En cours</strong> de constitution</span>
         </div>
     </div>
     <div class="fb-hero-side">
@@ -81,32 +79,32 @@
                 <img src="/images/pilier-bien-vivre.svg" alt="" width="48" height="48">
             </div>
             <h3 class="fb-pilier-name">Bien vivre</h3>
-            <p class="fb-pilier-desc">Animations, ateliers et moments partagés pour mieux se connaître entre voisins.</p>
-            <a href="{{ route('inscription') }}" class="fb-pilier-link">En savoir plus →</a>
+            <p class="fb-pilier-desc">Des projets pour mieux vivre entre générations et cultures.</p>
+            <!--<a href="{{ route('inscription') }}" class="fb-pilier-link">En savoir plus →</a>-->
         </article>
         <article class="fb-pilier">
             <div class="fb-pilier-icon">
                 <img src="/images/pilier-ecologie.svg" alt="" width="48" height="48">
             </div>
-            <h3 class="fb-pilier-name">Écologie & sécurité</h3>
-            <p class="fb-pilier-desc">Compost partagé, jardin de quartier, vigilance — agir au quotidien.</p>
-            <a href="{{ route('inscription') }}" class="fb-pilier-link">En savoir plus →</a>
+            <h3 class="fb-pilier-name">Citoyenneté</h3>
+            <p class="fb-pilier-desc">Des initiatives pour renforcer le tissu social et la participation citoyenne.</p>
+            <!--<a href="{{ route('inscription') }}" class="fb-pilier-link">En savoir plus →</a>-->
         </article>
         <article class="fb-pilier">
             <div class="fb-pilier-icon">
                 <img src="/images/pilier-fabrique.svg" alt="" width="48" height="48">
             </div>
-            <h3 class="fb-pilier-name">Fabrique à projets</h3>
-            <p class="fb-pilier-desc">Vous avez une idée ? On vous aide à la mettre en route.</p>
-            <a href="{{ route('inscription') }}" class="fb-pilier-link">En savoir plus →</a>
+            <h3 class="fb-pilier-name">Partage de la connaissance</h3>
+            <p class="fb-pilier-desc">Vous avez une idée, un projet ? On vous aide à la mettre en route.</p>
+            <!--<a href="{{ route('inscription') }}" class="fb-pilier-link">En savoir plus →</a>-->
         </article>
         <article class="fb-pilier">
             <div class="fb-pilier-icon">
                 <img src="/images/pilier-cooperative.svg" alt="" width="48" height="48">
             </div>
-            <h3 class="fb-pilier-name">Coopérative</h3>
-            <p class="fb-pilier-desc">Conciergerie et CAE pour soutenir l'entrepreneuriat local.</p>
-            <a href="{{ route('inscription') }}" class="fb-pilier-link">En savoir plus →</a>
+            <h3 class="fb-pilier-name">Développement local</h3>
+            <p class="fb-pilier-desc">Des structures pour soutenir l'entrepreneuriat local.</p>
+            <!--<a href="{{ route('inscription') }}" class="fb-pilier-link">En savoir plus →</a>-->
         </article>
     </div>
 </section>
@@ -165,11 +163,11 @@
     <div class="fb-testimonial">
         <div class="fb-quote-mark">«</div>
         <blockquote class="fb-quote-text">
-            On a commencé à trois autour d'un compost. Six mois plus tard, c'est un jardin de quartier qui nourrit huit familles. La Fabrique, c'est ça : on commence petit, on fait ensemble.
+            On a commencé à parler avenir autour d'un café. Quelques mois plus tard, c'est une liste d'initiatives citoyennes qui mobilise et qui nourrit l'envie de faire ensemble.
         </blockquote>
         <div class="fb-quote-author">
-            <span class="fb-quote-name">Anne B.</span>
-            <span class="fb-quote-role">— habitante, membre fondatrice</span>
+            <span class="fb-quote-name">Jonas V.</span>
+            <span class="fb-quote-role">— habitant, membre fondateur</span>
         </div>
     </div>
 </section>
@@ -223,7 +221,7 @@
     <div class="fb-cta">
         <div>
             <div class="fb-eyebrow">Adhérer</div>
-            <h2 class="fb-h2">Rejoignez La Fabrique</h2>
+            <h2 class="fb-h2">Rejoignez Hop'Initiatives</h2>
             <p class="fb-lead">Pour soutenir, et pour participer aux décisions — ensemble.</p>
         </div>
         <div class="fb-cta-actions">

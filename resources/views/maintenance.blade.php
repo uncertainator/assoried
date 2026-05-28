@@ -14,7 +14,15 @@
         <p style="color:#6b7280;margin-bottom:2rem;">
             Le site est temporairement indisponible pour maintenance. Merci de votre compréhension.
         </p>
-        <a href="{{ route('login') }}" class="fb-btn fb-btn-primary">Se connecter</a>
+        <form method="POST" action="{{ route('maintenance.bypass') }}" style="display:flex;flex-direction:column;align-items:center;gap:.75rem;">
+            @csrf
+            <input type="password" name="password" placeholder="Mot de passe" required
+                   style="padding:.5rem 1rem;border:1px solid #d1d5db;border-radius:.375rem;font-size:1rem;width:240px;text-align:center;">
+            @if(session('maintenance_error'))
+                <p style="color:#dc2626;font-size:.875rem;margin:0;">Mot de passe incorrect.</p>
+            @endif
+            <button type="submit" class="fb-btn fb-btn-primary">Accéder au site</button>
+        </form>
     </div>
 </div>
 </body>

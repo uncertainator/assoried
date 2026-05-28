@@ -25,5 +25,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@lafabrique.fr',
             'role' => UserRole::Admin,
         ]);
+
+        $this->call(TestDataSeeder::class);
     }
 }

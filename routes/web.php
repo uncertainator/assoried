@@ -96,6 +96,17 @@ Route::prefix('chemin-services')->name('parcours.')->group(function () {
 });
 
 /* ============================================================
+   Maintenance — bypass par mot de passe
+   ============================================================ */
+Route::post('/maintenance/bypass', function (\Illuminate\Http\Request $request) {
+    if ($request->input('password') === 'Hopinitiatives') {
+        session(['maintenance_bypass' => true]);
+        return redirect()->intended(route('home'));
+    }
+    return back()->with('maintenance_error', true);
+})->name('maintenance.bypass');
+
+/* ============================================================
    Auth — connexion (magic link + mot de passe)
    ============================================================ */
 Route::get('/connexion', [MagicLinkController::class, 'showForm'])->name('login');

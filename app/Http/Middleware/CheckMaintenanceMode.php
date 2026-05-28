@@ -16,11 +16,15 @@ class CheckMaintenanceMode
             return $next($request);
         }
 
-        if ($request->routeIs('login', 'login.password', 'auth.magic.*')) {
+        if ($request->routeIs('login', 'login.password', 'auth.magic.*', 'maintenance.bypass')) {
             return $next($request);
         }
 
         if (Auth::check() && Auth::user()->isAdmin()) {
+            return $next($request);
+        }
+
+        if (session('maintenance_bypass') === true) {
             return $next($request);
         }
 
