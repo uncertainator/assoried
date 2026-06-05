@@ -26,7 +26,7 @@ class ParcoursServiceFactory extends Factory
                 'Stratégie',
             ]),
             'description' => $this->faker->paragraph(),
-            'use_cases' => $this->faker->paragraph(),
+            'use_cases' => $this->faker->sentences(3),
             'cta_type' => $this->faker->randomElement(ParcoursCtaType::cases())->value,
             'cta_value' => $this->faker->url(),
             'is_active' => true,

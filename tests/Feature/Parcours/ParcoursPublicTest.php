@@ -167,7 +167,7 @@ class ParcoursPublicTest extends TestCase
         $service = ParcoursService::factory()->create([
             'name' => 'Stratégie',
             'description' => 'Une description détaillée du service.',
-            'cta_type' => 'contact',
+            'cta_type' => 'inscription',
             'cta_value' => 'https://example.com/contact',
         ]);
 

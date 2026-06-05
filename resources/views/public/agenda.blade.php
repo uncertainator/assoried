@@ -24,9 +24,6 @@
                             {{ $event->tag ?? $event->circle->name }}
                         </div>
                         <h2 class="fb-event-title">{{ $event->title }}</h2>
-                        @if ($event->description)
-                            <p class="fb-event-body">{{ $event->description }}</p>
-                        @endif
                         <div class="fb-event-meta">
                             <span class="fb-mono">{{ $event->starts_at->isoFormat('D MMMM YYYY · HH:mm') }}</span>
                             @if ($event->location)

@@ -63,7 +63,7 @@ class ParcoursAdminTest extends TestCase
         $response = $this->actingAs($admin)->put(route('admin.parcours.services.update', $service), [
             'name' => 'Nouveau nom',
             'description' => $service->description,
-            'use_cases' => $service->use_cases,
+            'use_cases' => implode("\n", $service->use_cases),
             'cta_type' => $service->cta_type->value,
             'cta_value' => $service->cta_value,
         ]);

@@ -40,21 +40,22 @@ class LabExternalRequestTest extends TestCase
     {
         Notification::fake();
 
-        $this->post(route('lab.external.citoyen.store'), [
-            'nom_contact' => 'Marie Dupont',
-            'email' => 'marie@exemple.fr',
-            'territoire' => 'Sélestat',
-            'message' => 'Je souhaite monter un projet de jardin partagé.',
-            'rgpd_consent' => '1',
-        ])
-            ->assertRedirect(route('lab.external.confirmation'))
-            ->assertSessionHas('success');
+        $this->from(route('lab.external.citoyen'))
+            ->post(route('lab.external.citoyen.store'), [
+                'nom_contact' => 'Marie Dupont',
+                'email' => 'marie@exemple.fr',
+                'type_projet' => 'Initiative citoyenne',
+                'message' => 'Je souhaite monter un projet de jardin partagé.',
+                'rgpd_consent' => '1',
+            ])
+            ->assertRedirect(route('lab.external.citoyen'))
+            ->assertSessionHas('submitted', 'citoyen');
 
         $this->assertDatabaseHas('lab_external_requests', [
             'type' => 'citoyen',
             'nom_contact' => 'Marie Dupont',
             'email' => 'marie@exemple.fr',
-            'territoire' => 'Sélestat',
+            'type_projet' => 'Initiative citoyenne',
             'statut' => LabRequestStatus::Nouvelle->value,
             'rgpd_consent' => true,
         ]);
@@ -68,24 +69,26 @@ class LabExternalRequestTest extends TestCase
     {
         Notification::fake();
 
-        $this->post(route('lab.external.entreprise.store'), [
-            'raison_sociale' => 'Acme SAS',
-            'nom_contact' => 'Jean Martin',
-            'email' => 'jean@acme.fr',
-            'telephone' => '03 88 12 34 56',
-            'besoin_type' => 'innovation',
-            'message' => 'Nous cherchons à innover dans nos process internes.',
-            'rgpd_consent' => '1',
-        ])
-            ->assertRedirect(route('lab.external.confirmation'))
-            ->assertSessionHas('success');
+        $this->from(route('lab.external.entreprise'))
+            ->post(route('lab.external.entreprise.store'), [
+                'raison_sociale' => 'Acme SAS',
+                'nom_contact' => 'Jean Martin',
+                'fonction' => 'Directeur',
+                'email' => 'jean@acme.fr',
+                'telephone' => '03 88 12 34 56',
+                'thematique' => 'Design Thinking',
+                'message' => 'Nous cherchons à innover dans nos process internes.',
+                'rgpd_consent' => '1',
+            ])
+            ->assertRedirect(route('lab.external.entreprise'))
+            ->assertSessionHas('submitted', 'entreprise');
 
         $this->assertDatabaseHas('lab_external_requests', [
             'type' => 'entreprise',
             'raison_sociale' => 'Acme SAS',
             'nom_contact' => 'Jean Martin',
             'email' => 'jean@acme.fr',
-            'besoin_type' => 'innovation',
+            'thematique' => 'Design Thinking',
             'statut' => LabRequestStatus::Nouvelle->value,
         ]);
     }
@@ -99,10 +102,11 @@ class LabExternalRequestTest extends TestCase
         $this->post(route('lab.external.citoyen.store'), [
             'nom_contact' => 'Marie Dupont',
             'email' => 'marie@exemple.fr',
+            'type_projet' => 'Initiative citoyenne',
             'message' => 'Un message valide.',
             // rgpd_consent absent
         ])
-            ->assertSessionHasErrors('rgpd_consent');
+            ->assertSessionHasErrors('rgpd_consent', null, 'citoyen');
 
         $this->assertDatabaseCount('lab_external_requests', 0);
     }
@@ -112,12 +116,14 @@ class LabExternalRequestTest extends TestCase
         $this->post(route('lab.external.entreprise.store'), [
             'raison_sociale' => 'Acme SAS',
             'nom_contact' => 'Jean Martin',
+            'fonction' => 'Directeur',
             'email' => 'jean@acme.fr',
             'telephone' => '03 88 12 34 56',
+            'thematique' => 'Design Thinking',
             'message' => 'Un message valide.',
             // rgpd_consent absent
         ])
-            ->assertSessionHasErrors('rgpd_consent');
+            ->assertSessionHasErrors('rgpd_consent', null, 'entreprise');
 
         $this->assertDatabaseCount('lab_external_requests', 0);
     }
@@ -131,11 +137,12 @@ class LabExternalRequestTest extends TestCase
         $this->post(route('lab.external.citoyen.store'), [
             'nom_contact' => 'Bot',
             'email' => 'bot@spam.com',
+            'type_projet' => 'Initiative citoyenne',
             'message' => 'Spam message.',
             'rgpd_consent' => '1',
             '_pot' => 'filled by bot',
         ])
-            ->assertSessionHasErrors('_pot');
+            ->assertSessionHasErrors('_pot', null, 'citoyen');
 
         $this->assertDatabaseCount('lab_external_requests', 0);
     }
@@ -156,6 +163,7 @@ class LabExternalRequestTest extends TestCase
         $this->post(route('lab.external.citoyen.store'), [
             'nom_contact' => 'Marie Dupont',
             'email' => 'marie@exemple.fr',
+            'type_projet' => 'Initiative citoyenne',
             'message' => 'Mon projet citoyen.',
             'rgpd_consent' => '1',
         ]);
@@ -174,6 +182,7 @@ class LabExternalRequestTest extends TestCase
         $this->post(route('lab.external.citoyen.store'), [
             'nom_contact' => 'Marie Dupont',
             'email' => 'marie@exemple.fr',
+            'type_projet' => 'Initiative citoyenne',
             'message' => 'Mon projet citoyen.',
             'rgpd_consent' => '1',
         ]);
@@ -188,6 +197,7 @@ class LabExternalRequestTest extends TestCase
         $this->post(route('lab.external.citoyen.store'), [
             'nom_contact' => 'Marie Dupont',
             'email' => 'marie@exemple.fr',
+            'type_projet' => 'Initiative citoyenne',
             'message' => 'Mon projet citoyen.',
             'rgpd_consent' => '1',
         ]);
