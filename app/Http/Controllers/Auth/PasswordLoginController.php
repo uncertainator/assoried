@@ -29,6 +29,24 @@ class PasswordLoginController extends Controller
                 );
         }
 
+        if ($user && $user->isPending()) {
+            return back()
+                ->withInput($request->only('email'))
+                ->withErrors(
+                    ['email' => 'Votre adhésion est en cours de validation par le bureau.'],
+                    'password'
+                );
+        }
+
+        if ($user && $user->isRejected()) {
+            return back()
+                ->withInput($request->only('email'))
+                ->withErrors(
+                    ['email' => 'Votre demande d\'adhésion n\'a pas été retenue.'],
+                    'password'
+                );
+        }
+
         if (! Auth::attempt(['email' => $email, 'password' => $request->password], $request->boolean('remember'))) {
             return back()
                 ->withInput($request->only('email'))

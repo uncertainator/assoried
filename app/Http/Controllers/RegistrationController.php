@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AccountStatus;
 use App\Mail\MagicLinkMail;
+use App\Mail\MembershipPendingMail;
 use App\Models\Circle;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -48,12 +50,23 @@ class RegistrationController extends Controller
                 // Compte magic link sans mot de passe : on lui ajoute un mot de passe
                 $user->update(['password' => $request->password]);
             } else {
-                // Nouveau compte
-                $user = User::create(['email' => $email, 'name' => '', 'password' => $request->password]);
+                // Nouveau compte : en attente de validation par le bureau
+                $user = User::create([
+                    'email' => $email,
+                    'name' => '',
+                    'password' => $request->password,
+                    'account_status' => AccountStatus::Pending,
+                ]);
                 event(new Registered($user));
+                Mail::to($user->email)->send(new MembershipPendingMail);
             }
 
             $this->attachCircles($user, (array) $request->input('circles', []));
+
+            // Un compte en attente (ou rejeté) ne peut pas se connecter.
+            if (! $user->isActive()) {
+                return redirect()->route('auth.membership-pending');
+            }
 
             Auth::login($user, remember: true);
 

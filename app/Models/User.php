@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\AccountStatus;
 use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,7 +17,7 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    protected $fillable = ['name', 'email', 'password', 'password_setup_dismissed_at', 'consent_display_contact', 'onboarding_completed'];
+    protected $fillable = ['name', 'email', 'password', 'password_setup_dismissed_at', 'consent_display_contact', 'onboarding_completed', 'account_status'];
 
     protected $hidden = ['password', 'remember_token'];
 
@@ -29,6 +30,7 @@ class User extends Authenticatable
             'consent_display_contact' => 'boolean',
             'onboarding_completed' => 'boolean',
             'role' => UserRole::class,
+            'account_status' => AccountStatus::class,
         ];
     }
 
@@ -50,6 +52,21 @@ class User extends Authenticatable
     public function isAdherent(): bool
     {
         return $this->role === UserRole::Adherent;
+    }
+
+    public function isPending(): bool
+    {
+        return $this->account_status === AccountStatus::Pending;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->account_status === AccountStatus::Active;
+    }
+
+    public function isRejected(): bool
+    {
+        return $this->account_status === AccountStatus::Rejected;
     }
 
     public function circles(): BelongsToMany
@@ -75,5 +92,10 @@ class User extends Authenticatable
     public function scopeAdmin($query)
     {
         return $query->where('role', UserRole::Admin);
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('account_status', AccountStatus::Pending);
     }
 }

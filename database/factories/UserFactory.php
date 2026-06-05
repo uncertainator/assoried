@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\AccountStatus;
 use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -32,6 +33,7 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
             'role' => UserRole::Adherent,
+            'account_status' => AccountStatus::Active,
         ];
     }
 
@@ -48,6 +50,16 @@ class UserFactory extends Factory
     public function adherent(): static
     {
         return $this->state(['role' => UserRole::Adherent]);
+    }
+
+    public function pending(): static
+    {
+        return $this->state(['account_status' => AccountStatus::Pending]);
+    }
+
+    public function rejected(): static
+    {
+        return $this->state(['account_status' => AccountStatus::Rejected]);
     }
 
     public function unverified(): static

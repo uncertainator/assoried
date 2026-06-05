@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Enums\UserRole;
-use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -19,13 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CircleSeeder::class);
         $this->call(PageSeeder::class);
         $this->call(ParcoursSeeder::class);
-
-        User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@lafabrique.fr',
-            'role' => UserRole::Admin,
-        ]);
-
-        $this->call(TestDataSeeder::class);
+        $this->call(AdminSeeder::class);
     }
 }

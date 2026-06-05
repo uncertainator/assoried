@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\CheckMaintenanceMode;
+use App\Http\Middleware\EnsureAccountActive;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsReferent;
 use Illuminate\Foundation\Application;
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => IsAdmin::class,
             'referent' => IsReferent::class,
+            'account.active' => EnsureAccountActive::class,
         ]);
         $middleware->web(append: [CheckMaintenanceMode::class]);
     })

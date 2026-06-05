@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\MagicLinkMail;
+use App\Mail\MembershipPendingMail;
 use App\Models\Circle;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -66,6 +67,22 @@ class MagicLinkController extends Controller
                     $user->circles()->attach($circle->id, ['joined_at' => now()]);
                 }
             }
+        }
+
+        // Nouvelle demande d'adhésion : on prévient le candidat, pas de connexion.
+        if ($user->wasRecentlyCreated) {
+            Mail::to($user->email)->send(new MembershipPendingMail);
+
+            return redirect()->route('auth.membership-pending');
+        }
+
+        // Compte en attente de validation ou refusé : connexion bloquée.
+        if (! $user->isActive()) {
+            return redirect()->route('login')->withErrors([
+                'email' => $user->isPending()
+                    ? 'Votre adhésion est en cours de validation par le bureau.'
+                    : 'Votre demande d\'adhésion n\'a pas été retenue.',
+            ]);
         }
 
         Auth::login($user, remember: true);

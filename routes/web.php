@@ -1,11 +1,13 @@
 <?php
 
-use App\Http\Controllers\Admin\ConsultationAdminController;
+use App\Http\Controllers\ActivitiesController;
 use App\Http\Controllers\Admin\CircleController as AdminCircleController;
 use App\Http\Controllers\Admin\CircleRequestController as AdminCircleRequestController;
+use App\Http\Controllers\Admin\ConsultationAdminController;
 use App\Http\Controllers\Admin\LabToolController as AdminLabToolController;
 use App\Http\Controllers\Admin\MaintenanceController;
 use App\Http\Controllers\Admin\MemberController as AdminMemberController;
+use App\Http\Controllers\Admin\MembershipController as AdminMembershipController;
 use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Admin\ParcoursQuestionController as AdminParcoursQuestionController;
 use App\Http\Controllers\Admin\ParcoursServiceController as AdminParcoursServiceController;
@@ -17,7 +19,6 @@ use App\Http\Controllers\Auth\PasswordLoginController;
 use App\Http\Controllers\Auth\PasswordSetupController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ActivitiesController;
 use App\Http\Controllers\ConsultationPublicController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LabExternalRequestController;
@@ -48,6 +49,7 @@ use App\Http\Controllers\Referent\CircleController as ReferentCircleController;
 use App\Http\Controllers\Referent\CircleDocumentController as ReferentCircleDocumentController;
 use App\Http\Controllers\Referent\CircleRequestController as ReferentCircleRequestController;
 use App\Http\Controllers\RegistrationController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /* ============================================================
@@ -98,11 +100,13 @@ Route::prefix('chemin-services')->name('parcours.')->group(function () {
 /* ============================================================
    Maintenance — bypass par mot de passe
    ============================================================ */
-Route::post('/maintenance/bypass', function (\Illuminate\Http\Request $request) {
+Route::post('/maintenance/bypass', function (Request $request) {
     if ($request->input('password') === 'Hopinitiatives') {
         session(['maintenance_bypass' => true]);
+
         return redirect()->intended(route('home'));
     }
+
     return back()->with('maintenance_error', true);
 })->name('maintenance.bypass');
 
@@ -117,6 +121,7 @@ Route::post('/deconnexion', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/lien-envoye', fn () => view('auth.link-sent'))->name('auth.link-sent');
 Route::get('/lien-invalide', fn () => view('auth.link-invalid'))->name('auth.link-invalid');
+Route::get('/demande-recue', fn () => view('auth.membership-pending'))->name('auth.membership-pending');
 
 /* ============================================================
    Auth — mot de passe oublié / réinitialisation
@@ -129,7 +134,7 @@ Route::post('/reinitialisation-mot-de-passe', [ResetPasswordController::class, '
 /* ============================================================
    Member routes (authenticated)
    ============================================================ */
-Route::middleware('auth')->prefix('mon-espace')->name('member.')->group(function () {
+Route::middleware(['auth', 'account.active'])->prefix('mon-espace')->name('member.')->group(function () {
     Route::get('/tableau-de-bord', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/cercles', [CircleController::class, 'index'])->name('circles.index');
     Route::post('/cercles/{circle}/rejoindre', [CircleController::class, 'join'])->name('circles.join');
@@ -142,6 +147,7 @@ Route::middleware('auth')->prefix('mon-espace')->name('member.')->group(function
     Route::delete('/mon-compte', [AccountController::class, 'destroy'])->name('account.destroy');
     Route::post('/onboarding/complete', function () {
         Auth::user()->update(['onboarding_completed' => true]);
+
         return response()->json(['ok' => true]);
     })->name('onboarding.complete');
 
@@ -210,7 +216,7 @@ Route::middleware('auth')->prefix('mon-espace')->name('member.')->group(function
 /* ============================================================
    Referent routes
    ============================================================ */
-Route::middleware(['auth', 'referent'])->prefix('referent')->name('referent.')->group(function () {
+Route::middleware(['auth', 'referent', 'account.active'])->prefix('referent')->name('referent.')->group(function () {
     Route::get('/demandes', [ReferentCircleRequestController::class, 'index'])->name('requests.index');
     Route::post('/demandes/{membership}/approuver', [ReferentCircleRequestController::class, 'approve'])->name('requests.approve');
     Route::post('/demandes/{membership}/refuser', [ReferentCircleRequestController::class, 'reject'])->name('requests.reject');
@@ -300,6 +306,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/demandes', [AdminCircleRequestController::class, 'index'])->name('requests.index');
     Route::post('/demandes/{membership}/approuver', [AdminCircleRequestController::class, 'approve'])->name('requests.approve');
     Route::post('/demandes/{membership}/refuser', [AdminCircleRequestController::class, 'reject'])->name('requests.reject');
+
+    Route::get('/adhesions', [AdminMembershipController::class, 'index'])->name('memberships.index');
+    Route::post('/adhesions/{user}/valider', [AdminMembershipController::class, 'approve'])->name('memberships.approve');
+    Route::post('/adhesions/{user}/rejeter', [AdminMembershipController::class, 'reject'])->name('memberships.reject');
     Route::resource('/cercles', AdminCircleController::class)->except(['show', 'destroy'])
         ->parameters(['cercles' => 'circle'])
         ->names([
