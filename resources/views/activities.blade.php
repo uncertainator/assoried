@@ -8,7 +8,7 @@
         <div class="fb-eyebrow">Nos activités</div>
         <h1 class="fb-h1" style="max-width:22ch;margin-top:12px;">Nos cercles thématiques</h1>
         <p class="fb-lead" style="max-width:58ch;margin-top:16px;">
-            La Fabrique s'organise en cercles thématiques — des petits groupes autonomes
+            L'association Hop'Initiatives s'organise en cercles thématiques — des petits groupes autonomes
             qui portent chacun un sujet, de l'idée à la réalisation. Chaque cercle
             a son référent, ses initiatives et son propre rythme de réunion.
         </p>
@@ -99,7 +99,7 @@
                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
                     </svg>
                     <h3 style="font:600 13px/1 var(--font-sans,sans-serif);color:var(--fg-primary);margin:0;text-transform:uppercase;letter-spacing:.06em;">
-                        Prochaines réunions
+                        Prochaines réunions publiques
                     </h3>
                 </div>
 
@@ -128,7 +128,7 @@
                 @endif
             </div>
 
-            {{-- Col 3 — Comptes-rendus récents --}}
+         <!--   {{-- Col 3 — Comptes-rendus récents --}}
             <div style="background:#fff;border:1px solid var(--border-subtle,#e8e2d5);border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:16px;">
                 <div style="display:flex;align-items:center;gap:8px;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ocre-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -161,7 +161,7 @@
                         @endforeach
                     </ul>
                 @endif
-            </div>
+            </div>-->
 
         </div>{{-- /grille --}}
 

@@ -23,7 +23,7 @@
 </section>
 
 {{-- ═══════════════════════════ SECTION 2 — CITOYEN / PERSO ══ --}}
-<section class="fb-section" id="citoyen">
+<section class="fb-section" id="citoyen" x-data="{ open: false }">
     <div class="lf-section-grid">
         <div>
             <span class="fb-badge fb-badge-mousse" style="margin-bottom:16px;">Citoyen &amp; Projets personnels</span>
@@ -33,7 +33,8 @@
                 l'accompagnement est gratuit pour les particuliers et les collectifs.
             </p>
             <div style="margin-top:32px;display:flex;flex-direction:column;gap:12px;align-items:flex-start;">
-                <a href="#form-citoyen" class="fb-btn fb-btn-primary">Déposer mon projet</a>
+                <a href="#form-citoyen" class="fb-btn fb-btn-primary"
+                   @click.prevent="open = true; $nextTick(() => document.getElementById('form-citoyen').scrollIntoView({ behavior: 'smooth' }))">Déposer mon projet</a>
                 <a href="{{ route('parcours.start') }}" class="fb-link-quiet">
                     Pas sûr·e par où commencer ? Suivez le parcours guidé →
                 </a>
@@ -45,14 +46,14 @@
         </div>
     </div>
 
-    <div id="form-citoyen" style="margin-top:48px;">
+    <div id="form-citoyen" style="margin-top:48px;" x-show="open" x-cloak>
         @include('lab.external._form-citoyen')
     </div>
 </section>
 
 {{-- ══════════════════════════ SECTION 3 — ENTREPRISES ══ --}}
 <div class="fb-section-creme">
-    <section class="fb-section" id="entreprises">
+    <section class="fb-section" id="entreprises" x-data="{ open: false }">
         <div class="lf-section-grid">
             <div class="lf-images-grid">
                 <x-image-placeholder label="Photo atelier entreprise 1" ratio="1:1" />
@@ -66,7 +67,8 @@
                     des expertises mobilisables sur mesure pour vos équipes et vos enjeux.
                 </p>
                 <div style="margin-top:32px;display:flex;flex-direction:column;gap:12px;align-items:flex-start;">
-                    <a href="#form-entreprise" class="fb-btn fb-btn-primary">Faire appel au Lab</a>
+                    <a href="#form-entreprise" class="fb-btn fb-btn-primary"
+                       @click.prevent="open = true; $nextTick(() => document.getElementById('form-entreprise').scrollIntoView({ behavior: 'smooth' }))">Faire appel au Lab</a>
                     <a href="{{ route('parcours.start') }}" class="fb-link-quiet">
                         Pas sûr·e par où commencer ? Suivez le parcours guidé →
                     </a>
@@ -74,7 +76,7 @@
             </div>
         </div>
 
-        <div id="form-entreprise" style="margin-top:48px;">
+        <div id="form-entreprise" style="margin-top:48px;" x-show="open" x-cloak>
             @include('lab.external._form-entreprise')
         </div>
     </section>

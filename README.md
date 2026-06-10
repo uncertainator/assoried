@@ -1,64 +1,166 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<h1 align="center">Hop'Initiatives</h1>
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <strong>La plateforme numérique de l'association — gouvernance partagée, vie associative et accompagnement de projets en un seul espace.</strong>
 </p>
 
-## Déploiement
+<p align="center">
+  <a href="#-fonctionnalités">Fonctionnalités</a> ·
+  <a href="#-stack-technique">Stack</a> ·
+  <a href="#-installation">Installation</a> ·
+  <a href="#-déploiement">Déploiement</a> ·
+  <a href="#-architecture">Architecture</a>
+</p>
 
-Après un `git pull`, exécuter `./deploy.sh` depuis la racine du projet.
-Le script vérifie les prérequis (`php`, `composer`), installe les dépendances si `composer.json` a changé, puis applique les migrations.
+<p align="center">
+  <img src="https://img.shields.io/badge/Laravel-12-FF2D20?style=flat-square&logo=laravel&logoColor=white" alt="Laravel 12">
+  <img src="https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat-square&logo=php&logoColor=white" alt="PHP 8.2+">
+  <img src="https://img.shields.io/badge/Tailwind_CSS-4-38BDF8?style=flat-square&logo=tailwindcss&logoColor=white" alt="Tailwind 4">
+  <img src="https://img.shields.io/badge/Vite-7-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite 7">
+  <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="MIT License">
+</p>
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📖 À propos
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**Hop'Initiatives** est une application web pensée pour la vie d'une association à gouvernance partagée. Elle réunit en un seul endroit l'espace public (vitrine, agenda, consultations citoyennes), l'espace membre organisé en **cercles** de travail, l'accompagnement de projets via **le Lab**, et un back-office d'administration complet.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+L'interface est entièrement en français.
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## ✨ Fonctionnalités
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 🌍 Espace public
 
-## Laravel Sponsors
+- **Vitrine & pages éditoriales** — pages statiques modifiables depuis l'admin
+- **Agenda public** des événements + inscription en ligne
+- **Inscription / demande d'adhésion** avec validation par l'équipe
+- **Chemin de services guidé** — parcours interactif à questions/réponses qui oriente le visiteur vers le bon service
+- **Consultations publiques** — sondages citoyens avec résultats et saisie terrain
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 🤝 Le Lab (accompagnement de projets)
 
-### Premium Partners
+- **Demandes externes** — formulaires dédiés citoyens & entreprises (sans authentification)
+- **Demandes de soutien interne** pour les membres, avec suivi de statut
+- **Catalogue de services** méthodologiques
+- **Boîte à outils** — bibliothèque de ressources téléchargeables (liens signés)
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 👥 Espace membre
 
-## Contributing
+- **Tableau de bord** personnalisé + onboarding
+- **Cercles** — rejoindre/quitter, annuaire, demandes d'adhésion
+- **Agenda** de cercle et personnel
+- **Journal de bord**, **réunions** & **comptes-rendus**
+- **Actions de cercle** (suivi de tâches)
+- **Bibliothèque de documents** par cercle
+- **Feed** général et par cercle (posts, mise en avant)
+- **Sondages** internes et **scrutins formels** (votes officiels)
+- **Notifications** in-app
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 🛡️ Rôles & administration
 
-## Code of Conduct
+- **Référents de cercle** — validation des demandes, gestion du cercle et de ses documents
+- **Admin** — membres (+ export), adhésions, cercles, pages, utilisateurs & promotions, statistiques, parcours guidé, consultations, scrutins, **mode maintenance**
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 🔐 Authentification
 
-## Security Vulnerabilities
+- **Lien magique** (magic link) par e-mail
+- **Mot de passe** avec configuration post-connexion, réinitialisation
+- **Statut de compte** (en attente / actif) via middleware dédié
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 🧰 Stack technique
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Domaine | Technologie |
+|---|---|
+| Framework | **Laravel 12** (PHP 8.2+) |
+| Front-end | **Blade**, **Tailwind CSS 4**, **Vite 7** |
+| Base de données | SQLite (par défaut) / MySQL / PostgreSQL |
+| Outils dev | Pint, Pail, Sail, PHPUnit, Faker |
+
+---
+
+## 🚀 Installation
+
+### Prérequis
+
+- PHP **8.2+**
+- Composer
+- Node.js & npm
+
+### Démarrage rapide
+
+```bash
+# Cloner le dépôt
+git clone <url-du-depot> hop-initiatives
+cd hop-initiatives
+
+# Installer + configurer en une commande
+composer setup
+```
+
+Le script `composer setup` installe les dépendances, crée le `.env`, génère la clé d'application, applique les migrations et compile les assets.
+
+### Lancer en développement
+
+```bash
+composer dev
+```
+
+Cette commande démarre **en parallèle** : le serveur PHP, l'écoute de la file d'attente, les logs (Pail) et Vite.
+
+### Données de test
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+---
+
+## 📦 Déploiement
+
+Après un `git pull`, lancer depuis la racine du projet :
+
+```bash
+./deploy.sh
+```
+
+Le script vérifie les prérequis (`php`, `composer`), réinstalle les dépendances si `composer.json` a changé, puis applique les migrations.
+
+---
+
+## 🏗️ Architecture
+
+```text
+app/
+├── Enums/                 # Énumérations (AccountStatus, …)
+├── Http/
+│   ├── Controllers/       # Public, Auth, Member, Referent, Admin, Lab
+│   └── Middleware/         # admin, referent, account.active, maintenance
+├── Models/                # Circle, Event, Consultation, Scrutin, LabService…
+├── Mail/                  # E-mails (adhésion, magic link…)
+└── Services/              # Logique métier (MembershipApprovalService…)
+
+resources/views/           # Vues Blade (public, member, admin, emails…)
+routes/web.php             # Routes groupées par rôle et domaine
+database/                  # Migrations, factories, seeders
+```
+
+Les routes sont organisées par espace : **public**, **auth**, **membre** (`/mon-espace`), **référent** (`/referent`), **Lab** (`/lab`) et **admin** (`/admin`), chacun protégé par les middlewares appropriés.
+
+---
+
+## 🧪 Tests
+
+```bash
+composer test
+```
+
+---
+
+## 📄 Licence
+
+Distribué sous licence **MIT**.

@@ -1,4 +1,4 @@
-<x-layouts.app title="La Fabrique — Association citoyenne">
+<x-layouts.app title="Hop'Initiatives — Association citoyenne Alsace Centrale">
 
 {{-- Hero --}}
 <section class="fb-hero">
