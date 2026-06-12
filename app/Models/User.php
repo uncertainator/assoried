@@ -21,6 +21,13 @@ class User extends Authenticatable
 
     protected $hidden = ['password', 'remember_token'];
 
+    /**
+     * Effective role override set by the impersonation middleware. NOT persisted —
+     * never assign to the `role` attribute, or Eloquent dirty-tracking would flush
+     * the simulated role to the database on the next save().
+     */
+    public ?UserRole $impersonatedRole = null;
+
     protected function casts(): array
     {
         return [
@@ -39,19 +46,41 @@ class User extends Authenticatable
         return is_null($this->password) && is_null($this->password_setup_dismissed_at);
     }
 
+    /**
+     * Resolve the effective role for authorization. Returns the impersonated role
+     * when a superadmin is endorsing a lower role, otherwise the real role.
+     */
+    public function effectiveRole(): UserRole
+    {
+        return $this->impersonatedRole ?? $this->role;
+    }
+
     public function isAdmin(): bool
     {
-        return $this->role === UserRole::Admin;
+        // Hierarchical: a superadmin inherits full admin access.
+        return $this->effectiveRole() === UserRole::Admin
+            || $this->effectiveRole() === UserRole::Superadmin;
     }
 
     public function isReferent(): bool
     {
-        return $this->role === UserRole::Referent;
+        return $this->effectiveRole() === UserRole::Referent;
     }
 
     public function isAdherent(): bool
     {
-        return $this->role === UserRole::Adherent;
+        return $this->effectiveRole() === UserRole::Adherent;
+    }
+
+    /** Effective superadmin (false while impersonating a lower role). */
+    public function isSuperadmin(): bool
+    {
+        return $this->effectiveRole() === UserRole::Superadmin;
+    }
+
+    public function isImpersonating(): bool
+    {
+        return $this->impersonatedRole !== null;
     }
 
     public function isPending(): bool
