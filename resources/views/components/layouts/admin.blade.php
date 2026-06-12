@@ -13,7 +13,7 @@
 <div class="admin-layout">
     <aside class="admin-sidebar">
         <div class="admin-sidebar-brand">
-            <div class="admin-sidebar-brand-text">La <em>Fabrique</em> <span style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--brique-300);display:block;margin-top:2px;">Admin</span></div>
+            <div class="admin-sidebar-brand-text">Hop'<em>Initiatives</em> <span style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--brique-300);display:block;margin-top:2px;">Admin</span></div>
         </div>
 
         <div class="admin-nav-head">Gestion</div>
@@ -27,11 +27,11 @@
         </a>
         <a href="{{ route('admin.requests.index') }}" class="admin-nav-link {{ request()->routeIs('admin.requests.*') ? 'active' : '' }}" style="display:flex;align-items:center;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h6M9 8h6M9 16h4"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
-            Demandes @include('components._nav_badge')
+            Demandes d'accès cercles @include('components._nav_badge')
         </a>
         <a href="{{ route('admin.memberships.index') }}" class="admin-nav-link {{ request()->routeIs('admin.memberships.*') ? 'active' : '' }}" style="display:flex;align-items:center;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
-            Adhésions
+            Demandes adhésions
             @php $pendingMembers = \App\Models\User::pending()->count(); @endphp
             @if ($pendingMembers > 0)
                 <span style="display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;background:#c85226;color:#fff;font-size:11px;font-weight:600;border-radius:9px;margin-left:6px;line-height:1;">{{ $pendingMembers }}</span>
@@ -41,21 +41,23 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2z"/><path d="M12 14c-5 0-8 2.5-8 4v1h16v-1c0-1.5-3-4-8-4z"/><path d="M17 8l2 2 4-4"/></svg>
             Rôles &amp; Référents
         </a>
+        <div class="admin-nav-head">Consulter</div>
         <a href="{{ route('admin.stats') }}" class="admin-nav-link {{ request()->routeIs('admin.stats*') ? 'active' : '' }}">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
             Statistiques
         </a>
+        <div class="admin-nav-head">Créer</div>
         <a href="{{ route('admin.parcours.index') }}" class="admin-nav-link {{ request()->routeIs('admin.parcours.*') ? 'active' : '' }}">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>
             Parcours guidé
         </a>
         <a href="{{ route('admin.scrutins.index') }}" class="admin-nav-link {{ request()->routeIs('admin.scrutins.*') ? 'active' : '' }}">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
-            Scrutins
+            Créer Scrutins
         </a>
         <a href="{{ route('admin.consultations.index') }}" class="admin-nav-link {{ request()->routeIs('admin.consultations.*') ? 'active' : '' }}">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            Consultations
+            Créer Consultations
         </a>
         <a href="{{ route('admin.pages.index') }}" class="admin-nav-link {{ request()->routeIs('admin.pages.*') ? 'active' : '' }}">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
@@ -77,6 +79,26 @@
             </button>
         </form>
 
+        @if (auth()->check() && auth()->user()->isSuperadmin())
+            <div class="admin-nav-head">Superadmin</div>
+            <a href="{{ route('audit-logs.index') }}" class="admin-nav-link {{ request()->routeIs('audit-logs.*') ? 'active' : '' }}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 14l2 2 4-4"/></svg>
+                Logs d'audit
+            </a>
+            @if (! session('impersonate_role'))
+                @foreach (['admin' => 'Admin', 'referent' => 'Référent', 'adherent' => 'Adhérent'] as $roleValue => $roleLabel)
+                    <form method="POST" action="{{ route('impersonate.start') }}" style="margin:0;">
+                        @csrf
+                        <input type="hidden" name="role" value="{{ $roleValue }}">
+                        <button type="submit" class="admin-nav-link" style="width:100%;background:none;border:none;text-align:left;cursor:pointer;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            Voir en {{ $roleLabel }}
+                        </button>
+                    </form>
+                @endforeach
+            @endif
+        @endif
+
         <div class="admin-nav-head" style="margin-top:auto;">Compte</div>
         <a href="{{ route('member.dashboard') }}" class="admin-nav-link">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg>
@@ -92,6 +114,7 @@
     </aside>
 
     <main class="admin-main">
+        <x-impersonation-banner />
         @if (session('success'))
             <div class="flash-success">{{ session('success') }}</div>
         @endif

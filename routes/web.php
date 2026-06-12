@@ -18,9 +18,11 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\PasswordLoginController;
 use App\Http\Controllers\Auth\PasswordSetupController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ConsultationPublicController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ImpersonationController;
 use App\Http\Controllers\LabExternalRequestController;
 use App\Http\Controllers\LabInternalRequestController;
 use App\Http\Controllers\LabServiceController;
@@ -297,6 +299,16 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 });
 
 /* ============================================================
+   Superadmin — impersonation & audit (auth only, NO admin middleware:
+   a superadmin viewing as adherent must still reach the stop route)
+   ============================================================ */
+Route::middleware('auth')->group(function () {
+    Route::post('/impersonate', [ImpersonationController::class, 'start'])->name('impersonate.start');
+    Route::post('/impersonate/stop', [ImpersonationController::class, 'stop'])->name('impersonate.stop');
+    Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');
+});
+
+/* ============================================================
    Admin routes
    ============================================================ */
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -328,6 +340,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/users/{user}/promote', [AdminUserController::class, 'promoteForm'])->name('users.promote.form');
     Route::post('/users/{user}/promote', [AdminUserController::class, 'promote'])->name('users.promote');
     Route::post('/users/{user}/demote', [AdminUserController::class, 'demote'])->name('users.demote');
+    Route::post('/users/{user}/role', [AdminUserController::class, 'changeRole'])->name('users.role');
 
     Route::get('/stats', [StatsController::class, 'index'])->name('stats');
 

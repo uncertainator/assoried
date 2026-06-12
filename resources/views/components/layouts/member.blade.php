@@ -16,8 +16,8 @@
         <div class="ea-side-brand">
             <a href="{{ route('home') }}" class="fb-logo">
                 <img src="{{ asset('images/logo-mark.svg') }}" width="28" height="28" alt="">
-           
-            <span class="ea-side-brand-text">La <em>Fabrique</em></span>
+
+            <span class="ea-side-brand-text">Hop'<em>Initiatives</em></span>
             </a>
         </div>
 
@@ -26,7 +26,7 @@
             <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/>
             </svg>
-            Accueil
+            Tableau de bord
         </a>
         <a id="nav-cercles" href="{{ route('member.circles.index') }}" class="ea-nav-item {{ request()->routeIs('member.circles.*') ? 'active' : '' }}">
             <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
@@ -34,40 +34,6 @@
             </svg>
             Mes cercles
         </a>
-        <div class="ea-nav-section">Créer</div>
-        <a href="{{ route('member.feed') }}" class="ea-nav-item {{ request()->routeIs('member.feed') ? 'active' : '' }}">
-            <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 22V4h16v18"/><path d="M8 10h8M8 14h8M8 18h5"/>
-            </svg>
-            Publications
-        </a>
-        <a href="{{ route('member.agenda.index') }}" class="ea-nav-item {{ request()->routeIs('member.agenda.*') || request()->routeIs('member.circles.agenda') ? 'active' : '' }}">
-            <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/>
-            </svg>
-            Agenda
-        </a>
-        <a id="nav-sondages" href="{{ route('member.polls.index') }}" class="ea-nav-item {{ request()->routeIs('member.polls.*') ? 'active' : '' }}">
-            <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 6h18M3 12h12M3 18h8"/><circle cx="19" cy="18" r="3"/><path d="m21 20-1.5-1.5"/>
-            </svg>
-            Sondages
-        </a>
-        <a id="nav-scrutins" href="{{ route('member.scrutins.index') }}" class="ea-nav-item {{ request()->routeIs('member.scrutins.*') ? 'active' : '' }}">
-            <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 12l2 2 4-4"/><rect x="3" y="3" width="18" height="18" rx="2"/>
-            </svg>
-            Scrutins
-        </a>
-        <a href="{{ route('lab.services.index') }}" class="ea-nav-item {{ request()->routeIs('lab.services.*') ? 'active' : '' }}">
-            <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2M8 7V5a2 2 0 0 0-4 0v2"/>
-            </svg>
-            Catalogue Lab
-        </a>
-
-        
-
         @auth
         @if(Auth::user()->isAdmin())
         <a href="{{ route('admin.index') }}" class="ea-nav-item {{ request()->is('admin*') ? 'active' : '' }}">
@@ -92,6 +58,42 @@
         </a>
         @endif
         @endauth
+        <div class="ea-nav-section">Consulter</div>
+        <a href="{{ route('member.feed') }}" class="ea-nav-item {{ request()->routeIs('member.feed') ? 'active' : '' }}">
+            <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 22V4h16v18"/><path d="M8 10h8M8 14h8M8 18h5"/>
+            </svg>
+            Publications des cercles
+        </a>
+        <a href="{{ route('member.agenda.index') }}" class="ea-nav-item {{ request()->routeIs('member.agenda.*') || request()->routeIs('member.circles.agenda') ? 'active' : '' }}">
+            <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/>
+            </svg>
+            Agenda général
+        </a>
+        <a id="nav-sondages" href="{{ route('member.polls.index') }}" class="ea-nav-item {{ request()->routeIs('member.polls.*') ? 'active' : '' }}">
+            <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 6h18M3 12h12M3 18h8"/><circle cx="19" cy="18" r="3"/><path d="m21 20-1.5-1.5"/>
+            </svg>
+            Sondages
+        </a>
+        <a id="nav-scrutins" href="{{ route('member.scrutins.index') }}" class="ea-nav-item {{ request()->routeIs('member.scrutins.*') ? 'active' : '' }}">
+            <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 12l2 2 4-4"/><rect x="3" y="3" width="18" height="18" rx="2"/>
+            </svg>
+            Scrutins formels
+        </a>
+        <div class="ea-nav-section">Outils</div>
+        <a href="{{ route('lab.services.index') }}" class="ea-nav-item {{ request()->routeIs('lab.services.*') ? 'active' : '' }}">
+            <svg class="ea-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2M8 7V5a2 2 0 0 0-4 0v2"/>
+            </svg>
+            Catalogue Lab
+        </a>
+
+
+
+
 
         <div class="ea-nav-section">Compte</div>
         <button
@@ -131,6 +133,7 @@
 
     {{-- Main content --}}
     <main class="ea-main">
+        <x-impersonation-banner />
         @if (session('success'))
             <div class="flash-success">{{ session('success') }}</div>
         @endif

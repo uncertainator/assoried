@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\CheckMaintenanceMode;
 use App\Http\Middleware\EnsureAccountActive;
+use App\Http\Middleware\HandleImpersonation;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsReferent;
 use Illuminate\Foundation\Application;
@@ -20,7 +21,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'referent' => IsReferent::class,
             'account.active' => EnsureAccountActive::class,
         ]);
-        $middleware->web(append: [CheckMaintenanceMode::class]);
+        // CheckMaintenanceMode runs first so it reads the REAL identity (maintenance
+        // stays transparent for a superadmin). HandleImpersonation then applies the
+        // effective-role override for downstream route middleware/policies.
+        $middleware->web(append: [CheckMaintenanceMode::class, HandleImpersonation::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

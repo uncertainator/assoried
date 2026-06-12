@@ -65,5 +65,11 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(ParcoursService::class, ParcoursServicePolicy::class);
         Gate::policy(ParcoursQuestion::class, ParcoursQuestionPolicy::class);
         Gate::policy(Scrutin::class, ScrutinPolicy::class);
+
+        // Effective superadmin only: false while impersonating, so a superadmin
+        // endorsing a lower role cannot start a new impersonation or read the logs
+        // (the return banner, driven by session, remains their way back).
+        Gate::define('impersonate', fn (User $user) => $user->isSuperadmin());
+        Gate::define('viewAuditLogs', fn (User $user) => $user->isSuperadmin());
     }
 }
