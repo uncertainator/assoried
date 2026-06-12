@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\AccountStatus;
 use App\Enums\UserRole;
 use App\Models\User;
 
@@ -25,6 +26,18 @@ class UserRolePolicy
         // isSuperadmin() is the EFFECTIVE role: false while impersonating, so a
         // superadmin endorsing a lower role cannot mutate roles.
         return $this->canActOn($currentUser, $targetUser) && $currentUser->isSuperadmin();
+    }
+
+    /**
+     * Exclude a member (governance act) — admin only, never on self, never
+     * twice. canActOn() also shields superadmins and blocks impersonators.
+     */
+    public function exclude(User $currentUser, User $targetUser): bool
+    {
+        return $this->canActOn($currentUser, $targetUser)
+            && $currentUser->isAdmin()
+            && $currentUser->id !== $targetUser->id
+            && $targetUser->account_status !== AccountStatus::Excluded;
     }
 
     /**

@@ -76,13 +76,15 @@ class MagicLinkController extends Controller
             return redirect()->route('auth.membership-pending');
         }
 
-        // Compte en attente de validation ou refusé : connexion bloquée.
+        // Compte en attente de validation, refusé ou exclu : connexion bloquée.
         if (! $user->isActive()) {
-            return redirect()->route('login')->withErrors([
-                'email' => $user->isPending()
-                    ? 'Votre adhésion est en cours de validation par le bureau.'
-                    : 'Votre demande d\'adhésion n\'a pas été retenue.',
-            ]);
+            $message = match (true) {
+                $user->isPending() => 'Votre adhésion est en cours de validation par le bureau.',
+                $user->isExcluded() => 'Ce compte n\'est plus actif.',
+                default => 'Votre demande d\'adhésion n\'a pas été retenue.',
+            };
+
+            return redirect()->route('login')->withErrors(['email' => $message]);
         }
 
         Auth::login($user, remember: true);

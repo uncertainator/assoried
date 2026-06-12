@@ -19,10 +19,30 @@ class CircleController extends Controller
 {
     public function index()
     {
-        $circles = Circle::where('is_active', true)->withCount('users')->get();
-        $myMemberships = Auth::user()->memberships()->get()->keyBy('circle_id');
+        $myMemberships = Auth::user()->memberships()
+            ->whereIn('status', [MembershipStatus::Approved, MembershipStatus::Pending])
+            ->get()
+            ->keyBy('circle_id');
+
+        $circles = Circle::whereIn('id', $myMemberships->keys())
+            ->withCount('users')
+            ->get();
 
         return view('member.circles.index', compact('circles', 'myMemberships'));
+    }
+
+    public function discover()
+    {
+        $excludedIds = Auth::user()->memberships()
+            ->whereIn('status', [MembershipStatus::Approved, MembershipStatus::Pending])
+            ->pluck('circle_id');
+
+        $circles = Circle::where('is_active', true)
+            ->whereNotIn('id', $excludedIds)
+            ->withCount('users')
+            ->get();
+
+        return view('member.circles.discover', compact('circles'));
     }
 
     public function directory(Circle $circle): View

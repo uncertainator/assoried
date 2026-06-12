@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\ExcludeMember;
 use App\Http\Controllers\Controller;
 use App\Models\Circle;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -22,6 +24,20 @@ class MemberController extends Controller
             ->withQueryString();
 
         return view('admin.members.index', compact('members', 'circles', 'circleFilter'));
+    }
+
+    public function exclude(Request $request, User $user, ExcludeMember $excludeMember): RedirectResponse
+    {
+        $this->authorize('exclude', $user);
+
+        $validated = $request->validate([
+            'reason' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $excludeMember->handle($user, $request->user(), $validated['reason'] ?? null);
+
+        return redirect()->route('admin.members.index')
+            ->with('success', 'Le membre a été exclu : compte désactivé et données anonymisées.');
     }
 
     public function export(Request $request): StreamedResponse

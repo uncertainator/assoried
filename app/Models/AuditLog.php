@@ -13,6 +13,8 @@ class AuditLog extends Model
 
     public const TYPE_ROLE_CHANGE = 'role_change';
 
+    public const TYPE_MEMBER_EXCLUSION = 'member_exclusion';
+
     public $timestamps = false;
 
     protected $fillable = [

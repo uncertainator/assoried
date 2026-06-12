@@ -47,7 +47,7 @@
         </thead>
         <tbody>
             @forelse ($members as $member)
-                <tr>
+                <tr x-data="{ excluding: false }">
                     <td>{{ $member->email }}</td>
                     <td>{{ $member->name ?: '—' }}</td>
                     <td>
@@ -57,9 +57,33 @@
                     </td>
                     <td>{{ $member->created_at->format('d/m/Y') }}</td>
                     <td style="text-align:right;">
-                        @if ($member->isAdmin())
-                            <span class="fb-badge fb-badge-brique">Admin</span>
-                        @endif
+                        <div x-show="! excluding" style="display:flex;gap:8px;align-items:center;justify-content:flex-end;">
+                            @if ($member->isAdmin())
+                                <span class="fb-badge fb-badge-brique">Admin</span>
+                            @endif
+                            @if ($member->isExcluded())
+                                <span class="fb-badge">Exclu·e</span>
+                            @endif
+                            @can('exclude', $member)
+                                <button type="button" class="fb-btn fb-btn-outline fb-btn-sm" @click="excluding = true">Exclure</button>
+                            @endcan
+                        </div>
+
+                        @can('exclude', $member)
+                            <form x-show="excluding" x-cloak method="POST" action="{{ route('admin.members.exclude', $member) }}"
+                                  style="display:flex;flex-direction:column;gap:8px;align-items:stretch;text-align:left;max-width:340px;margin-left:auto;">
+                                @csrf
+                                <p style="font-size:13px;color:var(--fg-tertiary);margin:0;">
+                                    Exclusion irréversible : le compte sera désactivé et les données personnelles anonymisées.
+                                </p>
+                                <textarea name="reason" rows="2" maxlength="1000" placeholder="Motif (optionnel)"
+                                          class="fb-textarea" style="width:100%;"></textarea>
+                                <div style="display:flex;gap:8px;justify-content:flex-end;">
+                                    <button type="button" class="fb-btn fb-btn-ghost fb-btn-sm" @click="excluding = false">Annuler</button>
+                                    <button type="submit" class="fb-btn fb-btn-outline fb-btn-sm">Confirmer l'exclusion</button>
+                                </div>
+                            </form>
+                        @endcan
                     </td>
                 </tr>
             @empty

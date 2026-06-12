@@ -47,6 +47,15 @@ class PasswordLoginController extends Controller
                 );
         }
 
+        if ($user && $user->isExcluded()) {
+            return back()
+                ->withInput($request->only('email'))
+                ->withErrors(
+                    ['email' => 'Ce compte n\'est plus actif.'],
+                    'password'
+                );
+        }
+
         if (! Auth::attempt(['email' => $email, 'password' => $request->password], $request->boolean('remember'))) {
             return back()
                 ->withInput($request->only('email'))

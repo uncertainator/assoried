@@ -98,6 +98,11 @@ class User extends Authenticatable
         return $this->account_status === AccountStatus::Rejected;
     }
 
+    public function isExcluded(): bool
+    {
+        return $this->account_status === AccountStatus::Excluded;
+    }
+
     public function circles(): BelongsToMany
     {
         return $this->belongsToMany(Circle::class)->withPivot('joined_at');

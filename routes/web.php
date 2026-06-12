@@ -14,11 +14,11 @@ use App\Http\Controllers\Admin\ParcoursServiceController as AdminParcoursService
 use App\Http\Controllers\Admin\ScrutinController as AdminScrutinController;
 use App\Http\Controllers\Admin\StatsController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\PasswordLoginController;
 use App\Http\Controllers\Auth\PasswordSetupController;
 use App\Http\Controllers\Auth\ResetPasswordController;
-use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ConsultationPublicController;
 use App\Http\Controllers\HomeController;
@@ -139,6 +139,7 @@ Route::post('/reinitialisation-mot-de-passe', [ResetPasswordController::class, '
 Route::middleware(['auth', 'account.active'])->prefix('mon-espace')->name('member.')->group(function () {
     Route::get('/tableau-de-bord', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/cercles', [CircleController::class, 'index'])->name('circles.index');
+    Route::get('/cercles/rejoindre', [CircleController::class, 'discover'])->name('circles.discover');
     Route::post('/cercles/{circle}/rejoindre', [CircleController::class, 'join'])->name('circles.join');
     Route::delete('/cercles/{circle}/quitter', [CircleController::class, 'leave'])->name('circles.leave');
     Route::delete('/cercles/{circle}/annuler-demande', [CircleController::class, 'cancelRequest'])->name('circles.cancel');
@@ -315,6 +316,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/', fn () => redirect()->route('admin.members.index'))->name('index');
     Route::get('/membres', [AdminMemberController::class, 'index'])->name('members.index');
     Route::get('/membres/export', [AdminMemberController::class, 'export'])->name('members.export');
+    Route::post('/membres/{user}/exclure', [AdminMemberController::class, 'exclude'])->name('members.exclude');
     Route::get('/demandes', [AdminCircleRequestController::class, 'index'])->name('requests.index');
     Route::post('/demandes/{membership}/approuver', [AdminCircleRequestController::class, 'approve'])->name('requests.approve');
     Route::post('/demandes/{membership}/refuser', [AdminCircleRequestController::class, 'reject'])->name('requests.reject');

@@ -7,4 +7,5 @@ enum AccountStatus: string
     case Pending = 'pending';
     case Active = 'active';
     case Rejected = 'rejected';
+    case Excluded = 'excluded';
 }

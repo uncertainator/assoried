@@ -67,6 +67,11 @@ class UserFactory extends Factory
         return $this->state(['account_status' => AccountStatus::Rejected]);
     }
 
+    public function excluded(): static
+    {
+        return $this->state(['account_status' => AccountStatus::Excluded]);
+    }
+
     public function unverified(): static
     {
         return $this->state(fn (array $attributes) => [
