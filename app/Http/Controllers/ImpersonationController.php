@@ -38,7 +38,10 @@ class ImpersonationController extends Controller
             'new_role' => $validated['role'],
         ]);
 
-        return back()->with('success', 'Vous visualisez désormais en tant que '.UserRole::from($validated['role'])->label().'.');
+        // Land on a route the simulated role can reach — back() would return to the
+        // admin panel, which the endorsed (lower) role can no longer view (403).
+        return redirect()->route('member.dashboard')
+            ->with('success', 'Vous visualisez désormais en tant que '.UserRole::from($validated['role'])->label().'.');
     }
 
     public function stop(Request $request): RedirectResponse

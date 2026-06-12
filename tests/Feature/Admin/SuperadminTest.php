@@ -176,7 +176,8 @@ class SuperadminTest extends TestCase
         $superadmin = User::factory()->superadmin()->create();
 
         $this->actingAs($superadmin)
-            ->post(route('impersonate.start'), ['role' => 'adherent']);
+            ->post(route('impersonate.start'), ['role' => 'adherent'])
+            ->assertRedirect(route('member.dashboard')); // not back() to the admin panel (403)
 
         $this->assertSame('adherent', session('impersonate_role'));
         $this->assertDatabaseHas('audit_logs', [
