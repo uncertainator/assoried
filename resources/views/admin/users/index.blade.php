@@ -27,23 +27,40 @@
                     <td>{{ $user->name ?: '—' }}</td>
                     <td>{{ $user->email }}</td>
                     <td>
-                        @if ($user->isAdmin())
+                        @if ($user->role === \App\Enums\UserRole::Superadmin)
+                            <span class="fb-badge fb-badge-brique">Superadmin</span>
+                        @elseif ($user->role === \App\Enums\UserRole::Admin)
                             <span class="fb-badge fb-badge-brique">Admin</span>
-                        @elseif ($user->isReferent())
+                        @elseif ($user->role === \App\Enums\UserRole::Referent)
                             <span class="fb-badge fb-badge-ocre">Référent</span>
                         @else
                             <span class="fb-badge">Adhérent</span>
                         @endif
                     </td>
                     <td>
-                        @if ($user->isReferent() && $user->assignedCircle)
+                        @if ($user->role === \App\Enums\UserRole::Referent && $user->assignedCircle)
                             {{ $user->assignedCircle->name }}
                         @else
                             —
                         @endif
                     </td>
                     <td style="text-align:right;">
-                        @if ($user->isAdherent())
+                        @if ($user->role === \App\Enums\UserRole::Superadmin)
+                            {{-- Superadmin is intouchable from the UI. --}}
+                            <span style="color:var(--fg-tertiary);font-size:13px;">—</span>
+                        @elseif (auth()->user()->isSuperadmin())
+                            {{-- Full role management — superadmin only. Never offers superadmin. --}}
+                            <form method="POST" action="{{ route('admin.users.role', $user) }}" style="display:inline-flex;gap:6px;align-items:center;"
+                                  onsubmit="return confirm('Changer le rôle de {{ addslashes($user->name) }} ?')">
+                                @csrf
+                                <select name="role" class="fb-select fb-select-sm" style="width:auto;">
+                                    <option value="admin" {{ $user->role === \App\Enums\UserRole::Admin ? 'selected' : '' }}>Admin</option>
+                                    <option value="referent" {{ $user->role === \App\Enums\UserRole::Referent ? 'selected' : '' }}>Référent</option>
+                                    <option value="adherent" {{ $user->role === \App\Enums\UserRole::Adherent ? 'selected' : '' }}>Adhérent</option>
+                                </select>
+                                <button type="submit" class="fb-btn fb-btn-outline fb-btn-sm">Appliquer</button>
+                            </form>
+                        @elseif ($user->isAdherent())
                             <a href="{{ route('admin.users.promote.form', $user) }}"
                                class="fb-btn fb-btn-outline fb-btn-sm">
                                 Promouvoir
